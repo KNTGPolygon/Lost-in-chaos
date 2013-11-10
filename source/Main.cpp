@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 
 	glfwSwapInterval(1);
 
+	cout << "cout macka\n";
 	double angle = 0.0;
 
 	while (!glfwWindowShouldClose(window.handle) || window.key[27]==2)
