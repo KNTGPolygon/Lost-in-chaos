@@ -1,10 +1,13 @@
 TARGET=$(MAKECMDGOALS)
 
 CC=g++
-CFLAGS=-c -std=c++11
-LFLAGS=-std=c++11
+CFLAGS=-c -std=c++11 -Iinclude -DGLEW_STATIC
+LFLAGS=-std=c++11 -Llib -static
+FLIBS=-lglfw3-$(TARGET) -lglew-$(TARGET)s -lopengl32 -lgdi32
 
-SOURCES=source/Main.cpp
+RM=rm -f
+
+SOURCES=source/Main.cpp source/Window.cpp
 OBJDIR=make/$(TARGET)/
 
 OBJECTS=$(SOURCES:source/%.cpp=$(OBJDIR)%.o)
@@ -31,11 +34,14 @@ compile: printc $(OBJECTS)
 
 link:
 	@echo Linking...
-	$(CC) $(LDFLAGS) $(OBJECTS) $(RC) $(FLIBS) -o $(OUTPUT)
+	$(CC) $(LFLAGS) $(OBJECTS) $(RC) $(FLIBS) -o $(OUTPUT)
 
 clean:
 	@echo Cleaning...
-	$(RM) $(OUTPUT)
+	$(RM) make/windows32/*.o
+	$(RM) make/windows64/*.o
+	$(RM) make/linux32/*.o
+	$(RM) make/linux64/*.o
 	$(RM) $(OBJECTS) $(RC)
 
 windows32: compile resources link
