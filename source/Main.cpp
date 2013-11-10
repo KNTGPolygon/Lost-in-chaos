@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 
 	glfwSwapInterval(1);
 
+	cout << "cout macka\n";
 	double angle = 0.0;
 	cout << "AAA\n";
 	
