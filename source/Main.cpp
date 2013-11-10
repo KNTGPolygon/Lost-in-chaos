@@ -21,7 +21,8 @@ int main(int argc, char* argv[])
 	glfwSwapInterval(1);
 
 	double angle = 0.0;
-
+	cout << "AAA\n";
+	
 	while (!glfwWindowShouldClose(window.handle) || window.key[27]==2)
 	{
 		int w, h;
