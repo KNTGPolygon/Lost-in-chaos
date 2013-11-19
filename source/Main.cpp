@@ -1,7 +1,9 @@
 #include <iostream>
+#include <ctime>
 
 #include "Utility.h"
 #include "Window.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -20,12 +22,17 @@ int main(int argc, char* argv[])
 
 	glfwSwapInterval(1);
 
-	cout << "cout macka\n";
-	double angle = 5.0;
-	cout << "AAA\n";
-	
+	cout << "*** sterowanie: WSAD ***\n";
+
+	game.loadMap("map/dm_lockdown.txt");
+
+	long long fpst = clock()+1000;
+	int fps = 0, fpsc = 0;
+
 	while (!glfwWindowShouldClose(window.handle) || window.key[27]==2)
 	{
+		game.update();
+
 		int w, h;
 		double aspect;
 
@@ -38,21 +45,24 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glLoadIdentity();
-		glOrtho(-aspect,aspect,-1,1,-1,1);
-		glRotated(angle,0,0,1);
-
-		glColor4f(1,1,1,1);
-		glBegin(GL_TRIANGLES);
-		glVertex2d(0.125,0.0);
-		glVertex2d(-0.125,0.125);
-		glVertex2d(-0.125,-0.125);
-		glEnd();
+		glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
+		
+		game.draw();
 
 		glFlush();
 
-		angle+=1.0;
-
 		WindowUpdate();
+
+		fpsc++;
+		if(clock()>=fpst)
+		{
+			fpst = clock()+1000;
+			fps = fpsc;
+			fpsc = 0;
+		}
+
+		if(window.key['F']==2)
+			cout << "fps = " << fps << "\n";
 	}
 
 	WindowRelease();
