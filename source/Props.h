@@ -26,22 +26,24 @@ struct PropPlane : Prop
 	Vector2d normal;
 	Vector3d color;
 
-	void draw();
-
 	bool calcImpact(Vector2d p, Vector2d v, double &time, Collision &c);
+
+	void draw();
 
 	PropPlane(double x, double y, double w, double h);
 	PropPlane();
 	~PropPlane();
 };
 
-struct PropCircle
+struct PropCircle : Prop
 {
 	double radius;
 
+	bool calcImpact(Vector2d p, Vector2d v, double &time, Collision &c);
+
 	void draw();
 
-	PropCircle(Vector2d p, double r);
+	PropCircle(double x, double y, double r);
 	PropCircle();
 	~PropCircle();
 };

@@ -1,6 +1,8 @@
 #include "Window.h"
 #include "Props.h"
 
+using namespace std;
+
 bool Prop::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
 {
 	return false;
@@ -59,6 +61,8 @@ PropPlane::PropPlane(double x, double y, double w, double h) : normal(w,h)
 	pos.x = x, pos.y = y;
 	color = Vector3d(1,1,1);
 	normal.normalize();
+	if(normal.magnitude2()<0.5)
+		normal = Vector2d(0,1);
 }
 
 PropPlane::PropPlane()
@@ -72,7 +76,71 @@ PropPlane::~PropPlane()
 {
 }
 
+bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col)
+{
+	double d = (p-pos).magnitude2()-radius*radius;
+	if(d<=0.0)
+	{
+		time = 0.0;
+		col.n = (p-pos).normalized();
+		if(col.n.magnitude2()<0.5)
+			col.n = Vector2d(0,1);
+		col.p = d;
+		double vr = v*col.n;
+		col.v = (vr<0.0 ? vr : 0.0);
+		return true;
+	}
+	else
+	if(d>0.0)
+	{
+		double a = v.magnitude2();
+		double b = 2.0*(p-pos)*v;
+		double c = -radius*radius;
+		double delta = b*b-4.0*a*c;
+		if(delta<0.0)
+			return false;
+		delta = sqrt(delta);
+		double t1 = (-b-delta)/(2.0*a);
+		double t2 = (-b+delta)/(2.0*a);
+		if(t1<0.0 && t2<0.0)
+			return false;
+		time = (t1<0.0 ? t2 : (t2<0.0 ? t1 : min(t1,t2)));
+		col.n = (p-pos+v*time).normalized();
+		if(col.n.magnitude2()<0.5)
+			col.n = Vector2d(0,1);
+		col.p = 0.0;
+		col.v = v*col.n;
+		return true;
+	}
+	return false;
+}
+
+void PropCircle::draw()
+{
+	glColor4f(1,1,1,1);
+	glBegin(GL_TRIANGLES);
+	const int n = 32;
+	for(int i=0;i<n;i++)
+	{
+		double a = 2.0*PI*(double)i/(double)n;
+		double b = 2.0*PI*(double)(i+1)/(double)n;
+		glVertex2f(pos.x,pos.y);
+		glVertex2f(pos.x+radius*cos(a),pos.y+radius*sin(a));
+		glVertex2f(pos.x+radius*cos(b),pos.y+radius*sin(b));
+	}
+	glEnd();
+}
+
+PropCircle::PropCircle(double x, double y, double r) : radius(r)
+{
+	pos.x = x, pos.y = y;
+}
+
 PropCircle::PropCircle()
 {
 	radius = 1.0;
+}
+
+PropCircle::~PropCircle()
+{
 }

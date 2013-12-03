@@ -46,6 +46,7 @@ void Game::loadMap(const char *mapname)
 	vProps.push_back(new PropPlane(5,-7,-1,1));
 	vProps.push_back(new PropPlane(-5,7,1,-1));
 	vProps.push_back(new PropPlane(5,7,-1,-1));
+	vProps.push_back(new PropCircle(0,1,2));
 }
 
 void Game::update()
