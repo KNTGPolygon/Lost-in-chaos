@@ -4,6 +4,7 @@
 #include "Utility.h"
 #include "Window.h"
 #include "Game.h"
+#include "Resources.h"
 
 #include <Windows.h>
 
@@ -47,6 +48,9 @@ int main(int argc, char* argv[])
 
 	long long t = clock(), dt = 0, tb = 0, sc = 0;
 
+	resources.init ();
+	resources.setParameters ();
+	
 	while (!glfwWindowShouldClose(window.handle) || window.key[27]==2)
 	{
 		game.update();
@@ -62,6 +66,8 @@ int main(int argc, char* argv[])
 		glClearColor(0,0,0,1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		resources.drawTexture (aspect);
+		
 		glLoadIdentity();
 		glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
 		glTranslated(-game.camera.x,-game.camera.y,0);
