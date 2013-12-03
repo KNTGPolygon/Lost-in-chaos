@@ -24,7 +24,7 @@ void EntPlayer::updateLogic(double dt)
 	force = Vector2d(0,-PLAYER_MASS*game.physics.gravity)+PLAYER_MOVE*move;
 	vel+=(force/mass)*dt;
 	if(window.key['P']==2)
-		cout << "p=" << pos << " v=" << vel << "\n";
+		cout << "p=" << pos << " v=" << vel << "\n", vel = Vector2d(0,0);
 }
 
 double EntPlayer::updateAuction(double dt)
@@ -57,7 +57,7 @@ void EntPlayer::updatePhysics(double dt)
 		{
 			double dv = (1.5*c.n*vel);
 			vel-=dv*c.n;
-			if(abs(vel*c.n)<1.0)
+			if(abs(vel*c.n)<0.25)
 				vel-=c.n*(vel*c.n);
 		}
 	}
