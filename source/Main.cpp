@@ -5,7 +5,13 @@
 #include "Window.h"
 #include "Game.h"
 
+#include <Windows.h>
+
 using namespace std;
+
+#define BASE 1000000ll
+
+long long targetFps = 100;
 
 int main(int argc, char* argv[])
 {
@@ -20,7 +26,17 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
+
+	#ifdef _WIN32
+    // Turn on vertical screen sync under Windows.
+    // (I.e. it uses the WGL_EXT_swap_control extension)
+    typedef BOOL (WINAPI *PFNWGLSWAPINTERVALEXTPROC)(int interval);
+    PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
+    wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+    if(wglSwapIntervalEXT)
+        wglSwapIntervalEXT(0);
+	#endif
 
 	cout << "*** sterowanie: WSAD ***\n";
 
@@ -28,6 +44,8 @@ int main(int argc, char* argv[])
 
 	long long fpst = clock()+1000;
 	int fps = 0, fpsc = 0;
+
+	long long t = clock(), dt = 0, tb = 0, sc = 0;
 
 	while (!glfwWindowShouldClose(window.handle) || window.key[27]==2)
 	{
@@ -64,6 +82,19 @@ int main(int argc, char* argv[])
 
 		if(window.key['F']==2)
 			cout << "fps = " << fps << "\n";
+
+		dt = clock()-t;
+		t+=dt;
+
+		tb = max(BASE*1000ll/targetFps-BASE*(dt-sc),0ll);
+		if(tb>=BASE)
+		{
+			sc = tb/BASE;
+			Sleep(sc);
+			tb%=BASE;
+		}
+		else
+			sc = 0;
 	}
 
 	WindowRelease();
