@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "Game.h"
 #include "Props.h"
@@ -37,7 +38,41 @@ Entity::~Entity()
 
 void Game::loadMap(const char *mapname)
 {
-	vUpdate.push_back(new EntPlayer);
+	fstream f(("map/"+string(mapname)+".txt").c_str(),ios_base::in);
+
+	if(!f.is_open())
+		return;
+
+	while(true)
+	{
+		string in;
+		if(!(f>>in) || f.eof())
+			break;
+		if(in=="plane")
+		{
+			double x, y, nx, ny;
+			f >> x >> y >> nx >> ny;
+			vProps.push_back(new PropPlane(x,y,nx,ny));
+		}
+		else
+		if(in=="circle")
+		{
+			double x, y, r;
+			f >> x >> y >> r;
+			vProps.push_back(new PropCircle(x,y,r));
+		}
+		else
+		if(in=="player")
+		{
+			double x, y;
+			f >> x >> y;
+			EntPlayer *player = new EntPlayer;
+			player->pos = Vector2d(x,y);
+			vUpdate.push_back(player);
+		}
+	}
+
+	/*vUpdate.push_back(new EntPlayer);
 	vProps.push_back(new PropPlane(0,-7,0,1));
 	vProps.push_back(new PropPlane(0,7,0,-1));
 	vProps.push_back(new PropPlane(-9,0,1,0));
@@ -46,7 +81,8 @@ void Game::loadMap(const char *mapname)
 	vProps.push_back(new PropPlane(5,-7,-1,1));
 	vProps.push_back(new PropPlane(-5,7,1,-1));
 	vProps.push_back(new PropPlane(5,7,-1,-1));
-	vProps.push_back(new PropCircle(0,1,2));
+	vProps.push_back(new PropCircle(0,1,2));*/
+	f.close();
 }
 
 void Game::update()
