@@ -36,6 +36,14 @@ void Resources::loadBunchOfTextures ()
 
 void Resources::drawSprite (Vector2d pos)
 {
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glBindTexture (GL_TEXTURE_2D, resources.texture[1]);
+
+	glEnable (GL_TEXTURE_2D);
+	//glLoadIdentity ();
+	/*
 	glColor4f(1,0,0,1);
 	glBegin(GL_LINES);
 	glVertex2f(pos.x-0.125,pos.y-0.125);
@@ -43,6 +51,16 @@ void Resources::drawSprite (Vector2d pos)
 	glVertex2f(pos.x+0.125,pos.y-0.125);
 	glVertex2f(pos.x-0.125,pos.y+0.125);
 	glEnd();
+	*/
+	
+	glBegin(GL_QUADS);
+	glTexCoord2f(-1.0, -1.0); glVertex2f(pos.x-0.125,pos.y-0.125);
+	glTexCoord2f(1.0, 1.0); glVertex2f(pos.x+0.125,pos.y+0.125);
+	glTexCoord2f(1.0, -1.0); glVertex2f(pos.x+0.125,pos.y-0.125);
+	glTexCoord2f(-1.0, 1.0); glVertex2f(pos.x-0.125,pos.y+0.125);
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
 }
 
 void Resources::drawBackgroundTexture (double aspect)

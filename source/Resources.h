@@ -4,12 +4,13 @@
 
 struct Resources
 {
-	GLuint texture;
+	GLuint texture[10];
 	void init ();
 	GLuint loadTexture (const char*);
 	
-	void setParameters ();
-	void drawTexture (double aspect);
+	void drawSprite (Vector2d pos);
+	void loadBunchOfTextures ();
+	void drawBackgroundTexture (double aspect);
 };
 
 extern Resources resources;
