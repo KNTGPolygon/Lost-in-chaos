@@ -79,14 +79,15 @@ PropPlane::~PropPlane()
 bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col)
 {
 	double d = (p-pos).magnitude2()-radius*radius;
-	if(d<=0.0)
+	Vector2d n = (p-pos).normalized();
+	double vr = v*n;
+	if(d<=0.0 && ((IsZero(d) && vr<0.0) || !IsZero(d)))
 	{
 		time = 0.0;
-		col.n = ((p-pos).normalized());
+		col.n = n;
 		if(col.n.magnitude2()<0.5)
 			col.n = Vector2d(0,1);
 		col.p = d;
-		double vr = v*col.n;
 		col.v = (vr<0.0 ? vr : 0.0);
 		return true;
 	}
@@ -95,7 +96,7 @@ bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col
 	{
 		double a = v.magnitude2();
 		double b = 2.0*(p-pos)*v;
-		double c = -radius*radius;
+		double c = (p-pos).magnitude2()-radius*radius;
 		double delta = b*b-4.0*a*c;
 		if(delta<0.0)
 			return false;
@@ -110,7 +111,7 @@ bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col
 			col.n = Vector2d(0,1);
 		col.p = 0.0;
 		col.v = v*col.n;
-		return true;
+		return (col.v<0.0 && !IsZero(col.v));
 	}
 	return false;
 }
