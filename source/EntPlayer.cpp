@@ -31,10 +31,10 @@ double EntPlayer::updateAuction(double dt)
 {
 	Collision c;
 	collisions.clear();
-	for(int i=0;i<game.vWalls.size();i++)
+	for(int i=0;i<game.vProps.size();i++)
 	{
 		double t = dt;
-		if(game.vWalls[i]->calcImpact(pos,vel,t,c) && t<=dt)
+		if(game.vProps[i]->calcImpact(pos,vel,t,c) && t<=dt)
 		{
 			if(t!=dt)
 				collisions.clear();
@@ -62,6 +62,7 @@ void EntPlayer::updatePhysics(double dt)
 		}
 	}
 	collisions.clear();
+	game.camera = (31.0*game.camera + pos)/32.0;
 }
 
 void EntPlayer::draw()

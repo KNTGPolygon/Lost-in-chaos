@@ -28,7 +28,7 @@ struct Entity
 	virtual ~Entity();
 };
 
-struct PropWall;
+struct Prop;
 
 struct Game
 {
@@ -42,8 +42,10 @@ struct Game
 		double gravity;
 	} physics;
 
+	Vector2d camera;
+
 	std::vector<Entity*> vUpdate;
-	std::vector<PropWall*> vWalls;
+	std::vector<Prop*> vProps;
 
 	void loadMap(const char *mapname);
 

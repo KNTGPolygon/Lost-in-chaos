@@ -1,18 +1,25 @@
 #include "Window.h"
 #include "Props.h"
 
-void PropWall::draw()
+bool Prop::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
 {
-	Vector2d n = 1024.0*normal;
-	glColor4f(color.x,color.y,color.z,1);
-	glBegin(GL_TRIANGLES);
-	glVertex2f(pos.x-n.y,pos.y+n.x);
-	glVertex2f(pos.x+n.y,pos.y-n.x);
-	glVertex2f(pos.x-n.x,pos.y-n.y);
-	glEnd();
+	return false;
 }
 
-bool PropWall::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
+void Prop::draw()
+{
+}
+
+Prop::Prop()
+{
+	propType = PROP_NONE;
+}
+
+Prop::~Prop()
+{
+}
+
+bool PropPlane::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
 {
 	double h = (p-pos)*normal;
 	double vr = v*normal;
@@ -36,20 +43,36 @@ bool PropWall::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
 	return false;
 }
 
-PropWall::PropWall(double x, double y, double w, double h) : pos(x,y), normal(w,h)
+void PropPlane::draw()
 {
+	Vector2d n = 1024.0*normal;
+	glColor4f(color.x,color.y,color.z,1);
+	glBegin(GL_TRIANGLES);
+	glVertex2f(pos.x-n.y,pos.y+n.x);
+	glVertex2f(pos.x+n.y,pos.y-n.x);
+	glVertex2f(pos.x-n.x,pos.y-n.y);
+	glEnd();
+}
+
+PropPlane::PropPlane(double x, double y, double w, double h) : normal(w,h)
+{
+	pos.x = x, pos.y = y;
 	color = Vector3d(1,1,1);
 	normal.normalize();
 }
 
-PropWall::PropWall()
+PropPlane::PropPlane()
 {
 	pos = Vector2d(0,0);
 	normal = Vector2d(0,1);
 	color = Vector3d(1,1,1);
 }
 
-PropWall::~PropWall()
+PropPlane::~PropPlane()
 {
 }
 
+PropCircle::PropCircle()
+{
+	radius = 1.0;
+}

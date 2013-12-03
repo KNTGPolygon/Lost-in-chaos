@@ -38,9 +38,14 @@ Entity::~Entity()
 void Game::loadMap(const char *mapname)
 {
 	vUpdate.push_back(new EntPlayer);
-	vWalls.push_back(new PropWall(0,-3,0,1));
-	vWalls.push_back(new PropWall(-3,-3,1,1));
-	vWalls.push_back(new PropWall(3,-3,-1,1));
+	vProps.push_back(new PropPlane(0,-7,0,1));
+	vProps.push_back(new PropPlane(0,7,0,-1));
+	vProps.push_back(new PropPlane(-9,0,1,0));
+	vProps.push_back(new PropPlane(9,0,-1,0));
+	vProps.push_back(new PropPlane(-5,-7,1,1));
+	vProps.push_back(new PropPlane(5,-7,-1,1));
+	vProps.push_back(new PropPlane(-5,7,1,-1));
+	vProps.push_back(new PropPlane(5,7,-1,-1));
 }
 
 void Game::update()
@@ -73,8 +78,8 @@ void Game::update()
 
 void Game::draw()
 {
-	for(int i=0;i<vWalls.size();i++)
-		vWalls[i]->draw();
+	for(int i=0;i<vProps.size();i++)
+		vProps[i]->draw();
 
 	for(int i=0;i<vUpdate.size();i++)
 	{

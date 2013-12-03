@@ -46,6 +46,7 @@ int main(int argc, char* argv[])
 
 		glLoadIdentity();
 		glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
+		glTranslated(-game.camera.x,-game.camera.y,0);
 		
 		game.draw();
 
