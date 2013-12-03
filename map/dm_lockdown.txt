@@ -1,0 +1,4 @@
+player 0 4
+plane 0 0 0 1
+circle -8 0 2
+circle 8 0 2
