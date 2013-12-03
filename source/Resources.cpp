@@ -53,11 +53,12 @@ void Resources::drawSprite (Vector2d pos)
 	glEnd();
 	*/
 	
+	float n = 4.0f
 	glBegin(GL_QUADS);
-	glTexCoord2f(-1.0, -1.0); glVertex2f(pos.x-0.125,pos.y-0.125);
-	glTexCoord2f(1.0, 1.0); glVertex2f(pos.x+0.125,pos.y+0.125);
-	glTexCoord2f(1.0, -1.0); glVertex2f(pos.x+0.125,pos.y-0.125);
-	glTexCoord2f(-1.0, 1.0); glVertex2f(pos.x-0.125,pos.y+0.125);
+	glTexCoord2f(-n, -n); glVertex2f(pos.x-0.125,pos.y-0.125);
+	glTexCoord2f(n, n); glVertex2f(pos.x+0.125,pos.y+0.125);
+	glTexCoord2f(n, -n); glVertex2f(pos.x+0.125,pos.y-0.125);
+	glTexCoord2f(-n, n); glVertex2f(pos.x-0.125,pos.y+0.125);
 	glEnd();
 
 	glDisable(GL_TEXTURE_2D);
