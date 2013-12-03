@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 	long long t = clock(), dt = 0, tb = 0, sc = 0;
 
 	resources.init ();
-	resources.setParameters ();
+	resources.loadBunchOfTextures ();
 	
 	while (!glfwWindowShouldClose(window.handle) || window.key[27]==2)
 	{
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 		glClearColor(0,0,0,1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		resources.drawTexture (aspect);
+		resources.drawBackgroundTexture (aspect);
 		
 		glLoadIdentity();
 		glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);

@@ -2,6 +2,7 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+#include "Math.h"
 #include "Resources.h"
 
 Resources resources;
@@ -27,18 +28,30 @@ GLuint Resources::loadTexture (const char* nameOfFile)
 	return ilutGLBindTexImage();
 }
 
-void Resources::setParameters ()
+void Resources::loadBunchOfTextures ()
 {
-	resources.texture = resources.loadTexture("../texture/Sciana_drewno2.png");
+	resources.texture[0] = resources.loadTexture("../texture/Sciana_drewno2.png");
+	resources.texture[1] = resources.loadTexture("../texture/trollface.png");
+}
 
+void Resources::drawSprite (Vector2d pos)
+{
+	glColor4f(1,0,0,1);
+	glBegin(GL_LINES);
+	glVertex2f(pos.x-0.125,pos.y-0.125);
+	glVertex2f(pos.x+0.125,pos.y+0.125);
+	glVertex2f(pos.x+0.125,pos.y-0.125);
+	glVertex2f(pos.x-0.125,pos.y+0.125);
+	glEnd();
+}
+
+void Resources::drawBackgroundTexture (double aspect)
+{
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-	glBindTexture (GL_TEXTURE_2D, resources.texture);
-}
-
-void Resources::drawTexture (double aspect)
-{
+	glBindTexture (GL_TEXTURE_2D, resources.texture[0]);
+	
 	glEnable (GL_TEXTURE_2D);
 	glLoadIdentity ();
 	
