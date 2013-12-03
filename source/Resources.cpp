@@ -30,8 +30,8 @@ GLuint Resources::loadTexture (const char* nameOfFile)
 
 void Resources::loadBunchOfTextures ()
 {
-	resources.texture[0] = resources.loadTexture("../texture/Sciana_drewno2.png");
-	resources.texture[1] = resources.loadTexture("../texture/trollface.png");
+	resources.texture[0] = resources.loadTexture("texture/Sciana_drewno2.png");
+	resources.texture[1] = resources.loadTexture("texture/trollface.png");
 }
 
 void Resources::drawSprite (Vector2d pos)

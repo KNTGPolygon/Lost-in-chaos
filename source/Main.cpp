@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 
 	cout << "*** sterowanie: WSAD ***\n";
 
-	game.loadMap("map/dm_lockdown.txt");
+	game.loadMap("dm_lockdown");
 
 	long long fpst = clock()+1000;
 	int fps = 0, fpsc = 0;
