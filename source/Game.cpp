@@ -41,7 +41,10 @@ void Game::loadMap(const char *mapname)
 	fstream f(("map/"+string(mapname)+".txt").c_str(),ios_base::in);
 
 	if(!f.is_open())
+	{
+		cout << "error: map `" << mapname << "` not found\n";
 		return;
+	}
 
 	while(true)
 	{
@@ -70,18 +73,10 @@ void Game::loadMap(const char *mapname)
 			player->pos = Vector2d(x,y);
 			vUpdate.push_back(player);
 		}
+		else
+			cout << "wtf `" << in << "`\n";
 	}
 
-	/*vUpdate.push_back(new EntPlayer);
-	vProps.push_back(new PropPlane(0,-7,0,1));
-	vProps.push_back(new PropPlane(0,7,0,-1));
-	vProps.push_back(new PropPlane(-9,0,1,0));
-	vProps.push_back(new PropPlane(9,0,-1,0));
-	vProps.push_back(new PropPlane(-5,-7,1,1));
-	vProps.push_back(new PropPlane(5,-7,-1,1));
-	vProps.push_back(new PropPlane(-5,7,1,-1));
-	vProps.push_back(new PropPlane(5,7,-1,-1));
-	vProps.push_back(new PropCircle(0,1,2));*/
 	f.close();
 }
 

@@ -82,7 +82,7 @@ bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col
 	if(d<=0.0)
 	{
 		time = 0.0;
-		col.n = (p-pos).normalized();
+		col.n = ((p-pos).normalized());
 		if(col.n.magnitude2()<0.5)
 			col.n = Vector2d(0,1);
 		col.p = d;
@@ -105,7 +105,7 @@ bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col
 		if(t1<0.0 && t2<0.0)
 			return false;
 		time = (t1<0.0 ? t2 : (t2<0.0 ? t1 : min(t1,t2)));
-		col.n = (p-pos+v*time).normalized();
+		col.n = ((p-pos+v*time).normalized());
 		if(col.n.magnitude2()<0.5)
 			col.n = Vector2d(0,1);
 		col.p = 0.0;
@@ -119,7 +119,7 @@ void PropCircle::draw()
 {
 	glColor4f(1,1,1,1);
 	glBegin(GL_TRIANGLES);
-	const int n = 32;
+	int n = 32+int(radius);
 	for(int i=0;i<n;i++)
 	{
 		double a = 2.0*PI*(double)i/(double)n;
