@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "EntPlayer.h"
 #include "Props.h"
+#include "Resources.h"
 
 #define PLAYER_MASS 75.0
 #define PLAYER_MOVE 1000.0
@@ -67,13 +68,7 @@ void EntPlayer::updatePhysics(double dt)
 
 void EntPlayer::draw()
 {
-	glColor4f(1,0,0,1);
-	glBegin(GL_LINES);
-	glVertex2f(pos.x-0.125,pos.y-0.125);
-	glVertex2f(pos.x+0.125,pos.y+0.125);
-	glVertex2f(pos.x+0.125,pos.y-0.125);
-	glVertex2f(pos.x-0.125,pos.y+0.125);
-	glEnd();
+	resources.drawSprite (pos);
 }
 
 EntPlayer::EntPlayer()
