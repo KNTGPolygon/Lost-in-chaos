@@ -90,7 +90,7 @@ void Game::draw()
 
 Game::Game()
 {
-	time.delta = 1.0/60.0;
+	time.delta = 1.0/100.0;
 	time.speed = 1.0;
 
 	physics.gravity = 9.81;
