@@ -14,7 +14,7 @@ struct Window
 	double aspect;
 
 	double mouseX, mouseY, scrollX, scrollY;
-
+	
 	int key[512];
 };
 

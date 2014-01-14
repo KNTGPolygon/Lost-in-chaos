@@ -12,6 +12,7 @@ void Resources::init ()
 	ilInit ();
 	iluInit ();
 	ilutRenderer (ILUT_OPENGL);
+
 }
 
 GLuint Resources::loadTexture (const char* nameOfFile)
@@ -22,7 +23,7 @@ GLuint Resources::loadTexture (const char* nameOfFile)
 	
 	if (!ilLoadImage(nameOfFile))
 	{
-		printf("false\n");
+		printf ("Houston, problem\n");
 	}
 	
 	return ilutGLBindTexImage();
@@ -38,11 +39,14 @@ void Resources::drawSprite (Vector2d pos)
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_REPEAT);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBindTexture (GL_TEXTURE_2D, resources.texture[1]);
-
+	
 	glEnable (GL_TEXTURE_2D);
-
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	float n = 1;
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 0); glVertex2f(pos.x-n,pos.y);
@@ -52,6 +56,7 @@ void Resources::drawSprite (Vector2d pos)
 	glEnd();
 
 	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 }
 
 void Resources::drawBackgroundTexture (double aspect)

@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 	int fps = 0, fpsc = 0;
 
 	long long t = clock(), dt = 0, tb = 0, sc = 0;
-
+	
 	resources.init ();
 	resources.loadBunchOfTextures ();
 	
