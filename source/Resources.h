@@ -1,10 +1,15 @@
 #pragma once
-
 #include <GL/gl.h>
+
+#define SPRITE_TROLLFACE 0
+#define TEX_WOODEN_PLANKS_1 0
+#define TEX_WOODEN_PLANKS_2 1
+#define TEX_WOODEN_PLANKS_3 2
 
 struct Resources
 {
-	GLuint texture[10];
+	GLuint texture[99];
+	GLuint sprite[99];
 	void init ();
 	GLuint loadTexture (const char*);
 	

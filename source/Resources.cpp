@@ -31,8 +31,10 @@ GLuint Resources::loadTexture (const char* nameOfFile)
 
 void Resources::loadBunchOfTextures ()
 {
-	resources.texture[0] = resources.loadTexture("texture/Sciana_drewno2.png");
-	resources.texture[1] = resources.loadTexture("texture/trollface.png");
+	resources.texture[0] = resources.loadTexture("texture/Sciana_drewno1.png");
+	resources.texture[1] = resources.loadTexture("texture/Sciana_drewno2.png");
+	resources.texture[2] = resources.loadTexture("texture/Sciana_drewno3.png");
+	resources.sprite[0] = resources.loadTexture("texture/trollface.png");
 }
 
 void Resources::drawSprite (Vector2d pos)
@@ -40,7 +42,7 @@ void Resources::drawSprite (Vector2d pos)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_REPEAT);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glBindTexture (GL_TEXTURE_2D, resources.texture[1]);
+	glBindTexture (GL_TEXTURE_2D, resources.sprite[TEX_WOODEN_PLANKS_1]);
 	
 	glEnable (GL_TEXTURE_2D);
 	
