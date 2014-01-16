@@ -6,9 +6,9 @@
 *.o
 
 # Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+#*.so
+#*.dylib
+#*.dll
 
 # Compiled Static libraries
 *.lai

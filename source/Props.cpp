@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "Props.h"
+#include "Resources.h"
 
 using namespace std;
 
@@ -48,11 +49,19 @@ bool PropPlane::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
 void PropPlane::draw()
 {
 	Vector2d n = 1024.0*normal;
+
+	glBindTexture (GL_TEXTURE_2D, resources.texture[4]);
+
+	double x[] = {pos.x-n.y,pos.x+n.y,pos.x-n.x};
+	double y[] = {pos.y+n.x,pos.y-n.x,pos.y-n.y};
+
 	glColor4f(color.x,color.y,color.z,1);
 	glBegin(GL_TRIANGLES);
-	glVertex2f(pos.x-n.y,pos.y+n.x);
-	glVertex2f(pos.x+n.y,pos.y-n.x);
-	glVertex2f(pos.x-n.x,pos.y-n.y);
+	for(int i=0;i<3;i++)
+	{
+		glTexCoord2f(x[i]*0.5,y[i]*0.5);
+		glVertex2f(x[i],y[i]);
+	}
 	glEnd();
 }
 
@@ -81,7 +90,7 @@ bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col
 	double d = (p-pos).magnitude2()-radius*radius;
 	Vector2d n = (p-pos).normalized();
 	double vr = v*n;
-	if(d<=0.0 && ((IsZero(d) && vr<0.0) || !IsZero(d)))
+	if(d<=0.0 && ((IsZero(d) && vr<0.0 && !IsZero(vr)) || !IsZero(d)))
 	{
 		time = 0.0;
 		col.n = n;
@@ -118,16 +127,26 @@ bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col
 
 void PropCircle::draw()
 {
-	glColor4f(1,1,1,1);
-	glBegin(GL_TRIANGLES);
+	double a, b, xa, ya, xb, yb;
 	int n = 32+int(radius);
+
+	glBindTexture (GL_TEXTURE_2D, resources.texture[3]);
+	
+	glColor4f(1,1,1,1);
+	
+	glBegin(GL_TRIANGLES);
 	for(int i=0;i<n;i++)
 	{
-		double a = 2.0*PI*(double)i/(double)n;
-		double b = 2.0*PI*(double)(i+1)/(double)n;
+		a = 2.0*PI*(double)i/(double)n;
+		b = 2.0*PI*(double)(i+1)/(double)n;
+		xa = pos.x+radius*cos(a), ya = pos.y+radius*sin(a);
+		xb = pos.x+radius*cos(b), yb = pos.y+radius*sin(b);
+		glTexCoord2f(pos.x*0.5,pos.y*0.5);
 		glVertex2f(pos.x,pos.y);
-		glVertex2f(pos.x+radius*cos(a),pos.y+radius*sin(a));
-		glVertex2f(pos.x+radius*cos(b),pos.y+radius*sin(b));
+		glTexCoord2f(xa*0.5,ya*0.5);
+		glVertex2f(xa,ya);
+		glTexCoord2f(xb*0.5,yb*0.5);
+		glVertex2f(xb,yb);
 	}
 	glEnd();
 }

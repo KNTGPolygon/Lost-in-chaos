@@ -3,7 +3,7 @@ TARGET=$(MAKECMDGOALS)
 CC=g++
 CFLAGS=-c -std=c++11 -Iinclude -DGLEW_STATIC
 LFLAGS=-std=c++11 -Llib -static
-FLIBS=-lglfw3-$(TARGET) -lglew-$(TARGET)s -lopengl32 -lgdi32 -lDevIL -lILU -lILUT
+FLIBS=-lglfw3-$(TARGET) -lglew-$(TARGET)s -lopengl32 -lgdi32 -lDevIL-$(TARGET) -lILU-$(TARGET) -lILUT-$(TARGET)
 
 RM=rm -f
 
@@ -13,7 +13,7 @@ OBJDIR=make/$(TARGET)/
 OBJECTS=$(SOURCES:source/%.cpp=$(OBJDIR)%.o)
 RC=
 
-OUTPUT=bin/lost-in-chaos-$(TARGET).exe
+OUTPUT=bin/$(TARGET)/lost-in-chaos.exe
 
 include make/$(TARGET).mk
 
@@ -28,12 +28,14 @@ resources:
 	$(RES) source/Resources.rc $(RC)
 
 printc:
+	mkdir -p make/$(TARGET)
 	@echo Compiling...
 
 compile: printc $(OBJECTS)
 
 link:
 	@echo Linking...
+	mkdir -p bin/$(TARGET)
 	$(CC) $(LFLAGS) $(OBJECTS) $(RC) $(FLIBS) -o $(OUTPUT)
 
 clean:

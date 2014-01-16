@@ -10,9 +10,9 @@
 
 using namespace std;
 
-#define BASE 1000000ll
+const long long BASE = 2*3*4*5*6*7*8*9*10;
 
-long long targetFps = 100;
+long long targetFps = 60;
 
 int main(int argc, char* argv[])
 {
@@ -37,20 +37,28 @@ int main(int argc, char* argv[])
 		wglSwapIntervalEXT(0);
 	#endif
 
-	cout << "*** sterowanie: WSAD ***\n";
+	cout << "*** sterowanie: WSAD, SPACJA(slowmo), F(fps), Esc(wyjscie) ***\n";
 
 	game.loadMap("dm_lockdown");
+
+	game.time.delta = 1.0/(double)targetFps;
 
 	long long fpst = clock()+1000;
 	int fps = 0, fpsc = 0;
 
 	long long t = clock(), dt = 0, tb = 0, sc = 0;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable (GL_TEXTURE_2D);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
 	
 	resources.init ();
 	resources.loadBunchOfTextures ();
 	
 	while (!glfwWindowShouldClose(window.handle) || window.key[27]==2)
 	{
+		game.time.speed = (window.key[' ']>0 ? 0.125 : 1.0);
 		game.update();
 
 		int w, h;
@@ -63,10 +71,12 @@ int main(int argc, char* argv[])
 		glViewport(0,0,w,h);
 		glClearColor(0,0,0,1);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		resources.drawBackgroundTexture (aspect);
 		
 		glLoadIdentity();
+
+		glColor4f(1,1,1,1);
+		resources.drawBackgroundTexture (0,game.camera.x/128.0);
+
 		glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
 		glTranslated(-game.camera.x,-game.camera.y,0);
 		
@@ -90,7 +100,7 @@ int main(int argc, char* argv[])
 		dt = clock()-t;
 		t+=dt;
 
-		tb = max(BASE*1000ll/targetFps-BASE*(dt-sc),0ll);
+		tb += max(BASE*1000ll/targetFps-BASE*(dt-sc),0ll);
 		if(tb>=BASE)
 		{
 			sc = tb/BASE;
