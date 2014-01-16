@@ -81,7 +81,7 @@ bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col
 	double d = (p-pos).magnitude2()-radius*radius;
 	Vector2d n = (p-pos).normalized();
 	double vr = v*n;
-	if(d<=0.0 && ((IsZero(d) && vr<0.0) || !IsZero(d)))
+	if(d<=0.0 && ((IsZero(d) && vr<0.0 && !IsZero(vr)) || !IsZero(d)))
 	{
 		time = 0.0;
 		col.n = n;
