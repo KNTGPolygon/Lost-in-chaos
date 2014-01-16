@@ -44,35 +44,16 @@ int Resources::loadTexture (const char* nameOfFile, int index, int flags)
 
 void Resources::loadBunchOfTextures ()
 {
-<<<<<<< HEAD
-	resources.texture[0] = resources.loadTexture("texture/Sciana_drewno1.png");
-	resources.texture[1] = resources.loadTexture("texture/Sciana_drewno2.png");
-	resources.texture[2] = resources.loadTexture("texture/Sciana_drewno3.png");
-	resources.sprite[0] = resources.loadTexture("texture/trollface.png");
-=======
 	resources.loadTexture("texture/background.jpg",0,TEXTURE_REPEAT);
 	resources.loadTexture("texture/trollface.png",1,0);
 	resources.loadTexture("texture/Sciana_drewno1.png",2,TEXTURE_REPEAT);
 	resources.loadTexture("texture/Sciana_drewno2.png",3,TEXTURE_REPEAT);
 	resources.loadTexture("texture/Sciana_drewno3.png",4,TEXTURE_REPEAT);
->>>>>>> b78c48bd94509823181e1aca834e94a24862a554
 }
 
 void Resources::drawSprite (int index, Vector2d pos)
 {
-<<<<<<< HEAD
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_REPEAT);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glBindTexture (GL_TEXTURE_2D, resources.sprite[TEX_WOODEN_PLANKS_1]);
-	
-	glEnable (GL_TEXTURE_2D);
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-=======
 	glBindTexture (GL_TEXTURE_2D, resources.texture[index]);
->>>>>>> b78c48bd94509823181e1aca834e94a24862a554
 	
 	float n = 1;
 	glBegin(GL_QUADS);
