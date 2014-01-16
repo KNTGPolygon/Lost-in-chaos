@@ -68,7 +68,8 @@ void EntPlayer::updatePhysics(double dt)
 
 void EntPlayer::draw()
 {
-	resources.drawSprite (pos);
+	glColor4f(1,1,1,1);
+	resources.drawSprite (1,pos);
 }
 
 EntPlayer::EntPlayer()
