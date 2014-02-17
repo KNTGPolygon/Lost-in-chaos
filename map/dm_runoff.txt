@@ -7,4 +7,4 @@ plane -64 0 1 1
 plane 64 0 -1 1
 enemy 10 10 1
 plane 0 20 1 -10
-nextlevel dm_runoff
+nextlevel dm_lockdown

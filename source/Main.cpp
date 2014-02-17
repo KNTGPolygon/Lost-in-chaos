@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Game.h"
 #include "Resources.h"
+#include "Menu.h"
 
 #include <Windows.h>
 
@@ -39,48 +40,35 @@ int main(int argc, char* argv[])
 
 	cout << "*** sterowanie: WSAD, SPACJA(slowmo), F(fps), Esc(wyjscie) ***\n";
 
-	game.loadMap("dm_lockdown");
-
 	game.time.delta = 1.0/(double)targetFps;
 
 	long long fpst = clock()+1000;
 	int fps = 0, fpsc = 0;
 
 	long long t = clock(), dt = 0, tb = 0, sc = 0;
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable (GL_TEXTURE_2D);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
 	
-	resources.init ();
-	resources.loadBunchOfTextures ();
-	
-	while (!glfwWindowShouldClose(window.handle) || window.key[27]==2)
+	int err = resources.init();
+	if(err!=0)
 	{
-		game.time.speed = (window.key[' ']>0 ? 0.125 : 1.0);
-		game.update();
+		cout << "resources error " << err << "\n";
+		return 0;
+	}
+	resources.load ();
 
-		int w, h;
-		double aspect;
+	MenuInit();
 
-		glfwGetWindowSize(window.handle,&w,&h);
-		
-		aspect = (double)w/(double)h;
+	ogg_stream music;
 
-		glViewport(0,0,w,h);
+	music.open("music/Menu.ogg");
+	music.playback();
+	
+	while (!glfwWindowShouldClose(window.handle) && menu.mode!=MENU_EXIT)
+	{
+		glViewport(0,0,window.width,window.height);
 		glClearColor(0,0,0,1);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		glLoadIdentity();
-
-		glColor4f(1,1,1,1);
-		resources.drawBackgroundTexture (0,game.camera.x/128.0);
-
-		glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
-		glTranslated(-game.camera.x,-game.camera.y,0);
-		
-		game.draw();
+		MenuUpdate();
 
 		glFlush();
 
@@ -93,6 +81,8 @@ int main(int argc, char* argv[])
 			fps = fpsc;
 			fpsc = 0;
 		}
+
+		music.update();
 
 		if(window.key['F']==2)
 			cout << "fps = " << fps << "\n";
@@ -111,6 +101,11 @@ int main(int argc, char* argv[])
 			sc = 0;
 	}
 
+	music.release();
+
+	resources.release();
+	MenuRelease();
 	WindowRelease();
+
     return 0;
 }

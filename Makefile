@@ -3,11 +3,11 @@ TARGET=$(MAKECMDGOALS)
 CC=g++
 CFLAGS=-c -std=c++11 -Iinclude -DGLEW_STATIC
 LFLAGS=-std=c++11 -Llib -static
-FLIBS=-lglfw3-$(TARGET) -lglew-$(TARGET)s -lopengl32 -lgdi32 -lDevIL-$(TARGET) -lILU-$(TARGET) -lILUT-$(TARGET)
+FLIBS=-lglfw3-$(TARGET) -lglew-$(TARGET)s -lopengl32 -lgdi32 -lDevIL-$(TARGET) -lILU-$(TARGET) -lILUT-$(TARGET) -lanttweakbar-$(TARGET) -lopenal-$(TARGET) -logg -lvorbis -lvorbisfile -lvorbisenc
 
 RM=rm -f
 
-SOURCES=source/Main.cpp source/Window.cpp source/Game.cpp source/Props.cpp source/EntPlayer.cpp source/Math.cpp source/Random.cpp source/Resources.cpp
+SOURCES=source/Main.cpp source/Window.cpp source/Game.cpp source/Props.cpp source/Math.cpp source/Random.cpp source/Resources.cpp source/Menu.cpp source/EntPlayer.cpp source/EntBullet.cpp source/EntEnemy.cpp
 OBJDIR=make/$(TARGET)/
 
 OBJECTS=$(SOURCES:source/%.cpp=$(OBJDIR)%.o)

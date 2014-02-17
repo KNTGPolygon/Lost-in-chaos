@@ -1,9 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <GL/glew.h>
 
 #include "Game.h"
 #include "Props.h"
 #include "EntPlayer.h"
+#include "EntEnemy.h"
+#include "Resources.h"
+#include "Window.h"
 
 using namespace std;
 
@@ -29,7 +33,7 @@ void Entity::draw()
 Entity::Entity()
 {
 	entity.type = 0;
-	entity.flags = 0;
+	entity.flags = ENTITY_ALIVE;
 }
 
 Entity::~Entity()
@@ -74,6 +78,19 @@ void Game::loadMap(const char *mapname)
 			vUpdate.push_back(player);
 		}
 		else
+		if(in=="enemy")
+		{
+			double x, y, d;
+			f >> x >> y >> d;
+			EntEnemy *enemy = new EntEnemy;
+			enemy->pos = Vector2d(x,y);
+			enemy->aim = Vector2d(d,0).normalized();
+			vUpdate.push_back(enemy);
+		}
+		else
+		if(in=="nextlevel")
+			f >> game.nextlevel;
+		else
 			cout << "wtf `" << in << "`\n";
 	}
 
@@ -84,9 +101,23 @@ void Game::update()
 {
 	double dt = time.delta*time.speed;
 
-	for(int i=0;i<vUpdate.size();i++)
+	int i, j;
+
+	for(i=0, j=0;i<vUpdate.size();i++)
 	{
 		vUpdate[i]->updateLogic(dt);
+		if(vUpdate[i]->entity.flags&ENTITY_ALIVE)
+			vUpdate[j] = vUpdate[i], j++;
+		else
+			delete vUpdate[i];
+	}
+
+	if(i!=j)
+	{
+		if(j<=0)
+			vUpdate.clear();
+		else
+			vUpdate.resize(j);
 	}
 
 	int count = 0;
@@ -109,7 +140,26 @@ void Game::update()
 }
 
 void Game::draw()
-{
+{	
+	double aspect = (double)window.width/(double)window.height;
+
+	glLoadIdentity();
+
+	//glColor4f(1,1,1,1);
+	//resources.drawBackgroundTexture (0,game.camera.x/128.0);
+
+	glBindTexture(GL_TEXTURE_2D,0);
+	glBegin(GL_QUADS);
+	glColor4f(0,0,0.2,1);
+	glVertex2f(-1,1);
+	glVertex2f(1,1);
+	glColor4f(0,0,0.05,1);
+	glVertex2f(1,-1);
+	glVertex2f(-1,-1);
+	glEnd();
+
+	glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
+	glTranslated(-game.camera.x,-game.camera.y,0);
 	for(int i=0;i<vProps.size();i++)
 		vProps[i]->draw();
 
@@ -117,6 +167,16 @@ void Game::draw()
 	{
 		vUpdate[i]->draw();
 	}
+}
+
+void Game::clear()
+{
+	for(int i=0;i<vUpdate.size();i++)
+		delete vUpdate[i];
+	vUpdate.clear();
+	for(int i=0;i<vProps.size();i++)
+		delete vProps[i];
+	vProps.clear();
 }
 
 Game::Game()

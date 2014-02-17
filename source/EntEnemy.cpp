@@ -1,29 +1,17 @@
 #include "Window.h"
+#include "EntEnemy.h"
 #include "Props.h"
 #include "Resources.h"
-#include "EntPlayer.h"
-#include "EntBullet.h"
 
-#define PLAYER_MASS 75.0
-#define PLAYER_MOVE 1000.0
-#define PLAYER_JUMP 1000.0
 
 using namespace std;
 
-void EntPlayer::updateLogic(double dt)
+void EntEnemy::updateLogic(double dt)
 {
-	{
-		double mx, my;
-		glfwGetCursorPos(window.handle,&mx,&my);
-		aim.x = mx-(double)window.width*0.5;
-		aim.y = (double)window.height*0.5-my;
-		aim.normalize();
-	}
-	Vector2d move, gn;
 	bool gnd = false;
+	Vector2d gn;
 
-	force = Vector2d(0,-PLAYER_MASS*game.physics.gravity);
-
+	force = Vector2d(0,-mass*game.physics.gravity);
 	for(int i=0;i<game.vProps.size();i++)
 	{
 		Vector2d n;
@@ -39,36 +27,16 @@ void EntPlayer::updateLogic(double dt)
 		}
 		if(var0 && var1 && var2 && var3 )
 		{
-			t = (force*n)*(t.normalized())*PLAYER_MI;
+			t = (force*n)*(t.normalized())*ENEMY_MI;
 			force+=t;
 		}
 	}
-
-	if(window.key['D']>0)
-		move-=gn.rotatedLeft(), dir = -1.0;
-	if(window.key['A']>0)
-		move+=gn.rotatedLeft(), dir = 1.0;
-
-	if(window.key['W']==2 && gnd)
-		vel+=Vector2d(0,8.0);
-
-	if(move.magnitude2()>0.5 && gnd)
-		move.normalize();
-
-	force+=+PLAYER_MOVE*move;
-
 	vel+=(force/mass)*dt;
-
-	if(window.key[500]==2)
-	{
-		EntBullet *bullet = new EntBullet;
-		bullet->pos = pos+Vector2d(0,1.75);
-		bullet->vel = vel+aim*32.0;
-		game.vUpdate.push_back(bullet);
-	}
+	if(health<=0.0)
+		entity.flags&=~ENTITY_ALIVE;
 }
 
-double EntPlayer::updateAuction(double dt)
+double EntEnemy::updateAuction(double dt)
 {
 	Collision c;
 	collisions.clear();
@@ -86,7 +54,7 @@ double EntPlayer::updateAuction(double dt)
 	return dt;
 }
 
-void EntPlayer::updatePhysics(double dt)
+void EntEnemy::updatePhysics(double dt)
 {
 	pos+=vel*dt;
 	if(isWinner(dt))
@@ -103,24 +71,25 @@ void EntPlayer::updatePhysics(double dt)
 		}
 	}
 	collisions.clear();
-	game.camera = (15.0*game.camera + pos)/16.0;
 }
 
-void EntPlayer::draw()
+void EntEnemy::draw()
 {
-	glColor4f(1,1,1,1);
+	glColor4f(0,1,0,1);
 	resources.drawSprite2 (1,pos,height*Vector2d(-Sign(aim.x),1));
 }
 
-EntPlayer::EntPlayer()
+EntEnemy::EntEnemy()
 {
+	entity.type = ENTITY_ENEMY;
 	pos = Vector2d(0,2);
 	vel = Vector2d(0,0);
-	mass = PLAYER_MASS;
-	dir = 1.0;
+	aim = Vector2d(1,0);
+	mass = 1.0;
 	height = 1.81;
+	health = 100.0;
 }
 
-EntPlayer::~EntPlayer()
+EntEnemy::~EntEnemy()
 {
 }

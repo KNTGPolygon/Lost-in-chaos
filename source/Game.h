@@ -1,9 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <map>
 
 #include "Math.h"
+
+#define ENTITY_ALIVE 1
 
 struct Entity
 {
@@ -47,10 +50,14 @@ struct Game
 	std::vector<Entity*> vUpdate;
 	std::vector<Prop*> vProps;
 
+	std::string nextlevel;
+
 	void loadMap(const char *mapname);
 
 	void update();
 	void draw();
+
+	void clear();
 
 	Game();
 	~Game();

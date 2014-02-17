@@ -2,12 +2,13 @@
 
 #include "Game.h"
 
-#define PLAYER_MI 1.0
+#define ENTITY_ENEMY 3
+#define ENEMY_MI 1.0
 
-struct EntPlayer : Entity
+struct EntEnemy : Entity
 {
 	Vector2d pos, vel, force, aim;
-	double mass, dir, height, health;
+	double mass, health, height;
 
 	std::vector<Collision> collisions;
 
@@ -17,6 +18,6 @@ struct EntPlayer : Entity
 
 	void draw();
 
-	EntPlayer();
-	~EntPlayer();
+	EntEnemy();
+	~EntEnemy();
 };

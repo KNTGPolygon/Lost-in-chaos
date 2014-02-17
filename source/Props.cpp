@@ -9,6 +9,16 @@ bool Prop::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
 	return false;
 }
 
+bool Prop::calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c)
+{
+	return false;
+}
+
+bool Prop::onEdge(Vector2d p, Vector2d &n)
+{
+	return false;
+}
+
 void Prop::draw()
 {
 }
@@ -44,6 +54,46 @@ bool PropPlane::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
 		return true;
 	}
 	return false;
+}
+
+bool PropPlane::calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c)
+{
+	double h1 = (p-pos)*normal;
+	double h2 = (p-pos+Vector2d(0,height))*normal;
+	double vr = v*normal;
+	if(h1<=0.0 && ((IsZero(h1) && vr<0.0 && !IsZero(vr)) || !IsZero(h1)))
+	{
+		time = 0.0;
+		c.n = normal;
+		c.p = h1;
+		c.v = (vr<0.0 ? vr : 0.0);
+		return true;
+	}
+	else
+	if(h2<=0.0 && ((IsZero(h2) && vr<0.0 && !IsZero(vr)) || !IsZero(h2)))
+	{
+		time = 0.0;
+		c.n = normal;
+		c.p = h2;
+		c.v = (vr<0.0 ? vr : 0.0);
+		return true;
+	}
+	else
+	if(vr<0.0)
+	{
+		time = -max(h1,h2)/vr;
+		c.n = normal;
+		c.p = 0.0;
+		c.v = vr;
+		return true;
+	}
+	return false;
+}
+
+bool PropPlane::onEdge(Vector2d p, Vector2d &n)
+{
+	n = normal;
+	return abs((p-pos)*normal)<PROP_EDGE_HEIGHT;
 }
 
 void PropPlane::draw()
@@ -125,6 +175,17 @@ bool PropCircle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &col
 	return false;
 }
 
+bool PropCircle::calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &col)
+{
+	return calcImpact(p,v,time,col);
+}
+
+bool PropCircle::onEdge(Vector2d p, Vector2d &n)
+{
+	n = (p-pos).normalized();
+	return abs((p-pos).magnitude()-radius)<PROP_EDGE_HEIGHT;
+}
+
 void PropCircle::draw()
 {
 	double a, b, xa, ya, xb, yb;
@@ -153,6 +214,7 @@ void PropCircle::draw()
 
 PropCircle::PropCircle(double x, double y, double r) : radius(r)
 {
+	propType = PROP_CIRCLE;
 	pos.x = x, pos.y = y;
 }
 
