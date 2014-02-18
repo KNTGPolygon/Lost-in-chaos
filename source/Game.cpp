@@ -140,11 +140,25 @@ void Game::update()
 	}
 }
 
+inline void lightCircle(double x, double y, double z, double r, double g, double b)
+{
+	for(int i=0;i<16;i++)
+	{
+		double a = 2.0*PI*(double)i/16.0;
+		double c = 2.0*PI*(double)(i+1)/16.0;
+		glColor4f(r,g,b,1);
+		glVertex2f(x,y);
+		glColor4f(0,0,0,0);
+		glVertex2f(x+z*cos(a),y+z*sin(a));
+		glVertex2f(x+z*cos(c),y+z*sin(c));
+	}
+}
+
 void Game::drawLight()
 {
 	double aspect = (double)window.width/(double)window.height;
 
-	double c = 0.5;
+	double c = 0.25;
 	glClearColor(c,c,c,1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -152,24 +166,14 @@ void Game::drawLight()
 	glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
 	glTranslated(-game.camera.x,-game.camera.y,0);
 
-	//if(window.key['S']>0)
+	glBegin(GL_TRIANGLES);
+	lightCircle(0,0,4,1,0,0);
+	glEnd();
+
 	DrawBlendSubtract();
 
-	double r = 5.0;
-	c = 0.5;
-
-	glTranslated(playerPos.x,playerPos.y,0);
 	glBegin(GL_TRIANGLES);
-	for(int i=0;i<16;i++)
-	{
-		double a = 2.0*PI*(double)i/16.0;
-		double b = 2.0*PI*(double)(i+1)/16.0;
-		glColor4f(1,1,1,c);
-		glVertex2f(0,0);
-		glColor4f(0,0,0,0);
-		glVertex2f(r*cos(a),r*sin(a));
-		glVertex2f(r*cos(b),r*sin(b));
-	}
+	lightCircle(playerPos.x,playerPos.y,5.0,0.25,0.25,0.25);
 	glEnd();
 
 	DrawBlendNormal();

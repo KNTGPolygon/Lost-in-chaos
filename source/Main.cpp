@@ -10,6 +10,8 @@
 #include "Menu.h"
 #include "Draw.h"
 
+#include <Windows.h>
+
 using namespace std;
 
 const long long BASE = 2*3*4*5*6*7*8*9*10;
@@ -88,7 +90,8 @@ int main(int argc, char* argv[])
 		if(tb>=BASE)
 		{
 			sc = tb/BASE;
-			this_thread::sleep_for(chrono::milliseconds(sc));
+			//this_thread::sleep_for(chrono::milliseconds(sc));
+			Sleep(sc);
 			tb%=BASE;
 		}
 		else
