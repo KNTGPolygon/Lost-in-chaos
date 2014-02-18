@@ -1,13 +1,14 @@
 #include <iostream>
 #include <ctime>
+#include <thread>
+#include <chrono>
 
 #include "Utility.h"
 #include "Window.h"
 #include "Game.h"
 #include "Resources.h"
 #include "Menu.h"
-
-#include <Windows.h>
+#include "Draw.h"
 
 using namespace std;
 
@@ -28,18 +29,6 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	glfwSwapInterval(0);
-
-	#ifdef _WIN32
-	typedef BOOL (WINAPI *PFNWGLSWAPINTERVALEXTPROC)(int interval);
-	PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
-	wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
-	if(wglSwapIntervalEXT)
-		wglSwapIntervalEXT(0);
-	#endif
-
-	cout << "*** sterowanie: WSAD, SPACJA(slowmo), F(fps), Esc(wyjscie) ***\n";
-
 	game.time.delta = 1.0/(double)targetFps;
 
 	long long fpst = clock()+1000;
@@ -47,13 +36,13 @@ int main(int argc, char* argv[])
 
 	long long t = clock(), dt = 0, tb = 0, sc = 0;
 	
-	int err = resources.init();
-	if(err!=0)
-	{
-		cout << "resources error " << err << "\n";
+	if(resources.init()!=0)
 		return 0;
-	}
+
 	resources.load ();
+
+	if(DrawInit()!=0)
+		return 0;
 
 	MenuInit();
 
@@ -65,10 +54,15 @@ int main(int argc, char* argv[])
 	while (!glfwWindowShouldClose(window.handle) && menu.mode!=MENU_EXIT)
 	{
 		glViewport(0,0,window.width,window.height);
+
+		DrawTargetWindow();
+
 		glClearColor(0,0,0,1);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
+
 		MenuUpdate();
+
+		DrawTargetWindow();
 
 		glFlush();
 
@@ -94,7 +88,7 @@ int main(int argc, char* argv[])
 		if(tb>=BASE)
 		{
 			sc = tb/BASE;
-			Sleep(sc);
+			this_thread::sleep_for(chrono::milliseconds(sc));
 			tb%=BASE;
 		}
 		else
@@ -102,9 +96,9 @@ int main(int argc, char* argv[])
 	}
 
 	music.release();
-
-	resources.release();
 	MenuRelease();
+	DrawRelease();
+	resources.release();
 	WindowRelease();
 
     return 0;

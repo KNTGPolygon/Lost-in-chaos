@@ -8,6 +8,7 @@
 #include "EntEnemy.h"
 #include "Resources.h"
 #include "Window.h"
+#include "Draw.h"
 
 using namespace std;
 
@@ -137,6 +138,41 @@ void Game::update()
 	{
 		cout << "count="<<count<<"\n";
 	}
+}
+
+void Game::drawLight()
+{
+	double aspect = (double)window.width/(double)window.height;
+
+	double c = 0.5;
+	glClearColor(c,c,c,1);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glLoadIdentity();
+	glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
+	glTranslated(-game.camera.x,-game.camera.y,0);
+
+	//if(window.key['S']>0)
+	DrawBlendSubtract();
+
+	double r = 5.0;
+	c = 0.5;
+
+	glTranslated(playerPos.x,playerPos.y,0);
+	glBegin(GL_TRIANGLES);
+	for(int i=0;i<16;i++)
+	{
+		double a = 2.0*PI*(double)i/16.0;
+		double b = 2.0*PI*(double)(i+1)/16.0;
+		glColor4f(1,1,1,c);
+		glVertex2f(0,0);
+		glColor4f(0,0,0,0);
+		glVertex2f(r*cos(a),r*sin(a));
+		glVertex2f(r*cos(b),r*sin(b));
+	}
+	glEnd();
+
+	DrawBlendNormal();
 }
 
 void Game::draw()

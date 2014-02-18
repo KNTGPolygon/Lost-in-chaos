@@ -3,6 +3,7 @@
 #include "Resources.h"
 #include "EntPlayer.h"
 #include "EntBullet.h"
+#include "Physics.h"
 
 #define PLAYER_MASS 75.0
 #define PLAYER_MOVE 1000.0
@@ -12,6 +13,7 @@ using namespace std;
 
 void EntPlayer::updateLogic(double dt)
 {
+	game.playerPos = pos;
 	{
 		double mx, my;
 		glfwGetCursorPos(window.handle,&mx,&my);
@@ -20,29 +22,7 @@ void EntPlayer::updateLogic(double dt)
 		aim.normalize();
 	}
 	Vector2d move, gn;
-	bool gnd = false;
-
-	force = Vector2d(0,-PLAYER_MASS*game.physics.gravity);
-
-	for(int i=0;i<game.vProps.size();i++)
-	{
-		Vector2d n;
-		bool var0 = game.vProps[i]->onEdge(pos,n), var1, var2, var3;
-		Vector2d t = vel-(n*(vel*n));
-		var1 = !IsZero(force*n);
-		var2 = abs(vel*n)<0.01;
-		var3 = !IsZero(t.magnitude2());
-		if(var0)
-		{
-			gn = n;
-			gnd = true;
-		}
-		if(var0 && var1 && var2 && var3 )
-		{
-			t = (force*n)*(t.normalized())*PLAYER_MI;
-			force+=t;
-		}
-	}
+	bool gnd = game.findGround(pos,vel,gn);
 
 	if(window.key['D']>0)
 		move-=gn.rotatedLeft(), dir = -1.0;
@@ -50,12 +30,13 @@ void EntPlayer::updateLogic(double dt)
 		move+=gn.rotatedLeft(), dir = 1.0;
 
 	if(window.key['W']==2 && gnd)
-		vel+=Vector2d(0,8.0);
+		vel+=Vector2d(0,PLAYER_JUMP_SPEED);
 
-	if(move.magnitude2()>0.5 && gnd)
+	if(move.magnitude2()>0.5)
 		move.normalize();
 
-	force+=+PLAYER_MOVE*move;
+	force = Vector2d(0,-PLAYER_MASS*game.physics.gravity);
+	force += Friction(vel-move*PLAYER_WALK_SPEED,force,gn)*PLAYER_MI;
 
 	vel+=(force/mass)*dt;
 
@@ -89,6 +70,7 @@ double EntPlayer::updateAuction(double dt)
 void EntPlayer::updatePhysics(double dt)
 {
 	pos+=vel*dt;
+	game.playerPos = pos;
 	if(isWinner(dt))
 	for(int i=0;i<collisions.size();i++)
 	{
@@ -96,10 +78,10 @@ void EntPlayer::updatePhysics(double dt)
 		pos-=c.p*c.n;
 		if(c.v<0.0)
 		{
-			double dv = (1.25*c.n*vel);
+			double dv = (1.0*c.n*vel);
 			vel-=dv*c.n;
-			if(abs(vel*c.n)<0.125)
-				vel-=c.n*(vel*c.n);
+			//if(abs(vel*c.n)<0.125)
+			//	vel-=c.n*(vel*c.n);
 		}
 	}
 	collisions.clear();

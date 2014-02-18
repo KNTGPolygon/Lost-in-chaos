@@ -2,7 +2,9 @@
 
 #include "Game.h"
 
-#define PLAYER_MI 1.0
+#define PLAYER_WALK_SPEED 2.0
+#define PLAYER_JUMP_SPEED 5.0
+#define PLAYER_MI 2.0
 
 struct EntPlayer : Entity
 {

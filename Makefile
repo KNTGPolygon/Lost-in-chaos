@@ -7,7 +7,7 @@ FLIBS=-lglfw3-$(TARGET) -lglew-$(TARGET)s -lopengl32 -lgdi32 -lDevIL-$(TARGET) -
 
 RM=rm -f
 
-SOURCES=source/Main.cpp source/Window.cpp source/Game.cpp source/Props.cpp source/Math.cpp source/Random.cpp source/Resources.cpp source/Menu.cpp source/EntPlayer.cpp source/EntBullet.cpp source/EntEnemy.cpp
+SOURCES=source/Main.cpp source/Window.cpp source/Draw.cpp source/Game.cpp source/GameTools.cpp source/Props.cpp source/Math.cpp source/Random.cpp source/Resources.cpp source/Menu.cpp source/EntPlayer.cpp source/EntBullet.cpp source/EntEnemy.cpp
 OBJDIR=make/$(TARGET)/
 
 OBJECTS=$(SOURCES:source/%.cpp=$(OBJDIR)%.o)

@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include "Game.h"
 #include "Resources.h"
+#include "Draw.h"
 
 using namespace std;
 
@@ -70,6 +71,7 @@ void MenuUpdate()
 			TwDefine(" MainMenu visible=true ");
 		}
 		break;
+
 		case MENU_MAIN:
 		TwDraw();
 		glBindTexture(GL_TEXTURE_2D,0);
@@ -82,6 +84,7 @@ void MenuUpdate()
 		glEnd();
 		menu.menuTime+=1.0/60.0;
 		break;
+
 		case MENU_GAME:
 		if(window.key[GLFW_KEY_ESCAPE]==2)
 		{
@@ -93,7 +96,38 @@ void MenuUpdate()
 		}
 		game.time.speed = (window.key[' ']>0 ? 0.125 : 1.0);
 		game.update();
+
+		glBindTexture(GL_TEXTURE_2D,0);
+		DrawTargetLight();
+		game.drawLight();
+
+		DrawTargetColor();
+		glClearColor(0,0,0,1);
+		glClear(GL_COLOR_BUFFER_BIT);
 		game.draw();
+		
+		DrawTargetWindow();
+		
+		glUseProgram(draw.pTextureLight);
+		
+		glLoadIdentity();
+
+		glActiveTexture( GL_TEXTURE0 );
+		glBindTexture(GL_TEXTURE_2D,draw.texture[DRAW_COLOR]);
+		glActiveTexture( GL_TEXTURE1 );
+		glBindTexture(GL_TEXTURE_2D,draw.texture[DRAW_LIGHT]);
+
+		glColor4f(1,1,1,1);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0, 0); glVertex2f(-1,-1);
+		glTexCoord2f(0, 1); glVertex2f(-1,1);
+		glTexCoord2f(1, 1); glVertex2f(1,1);
+		glTexCoord2f(1, 0); glVertex2f(1,-1);
+		glEnd();
+
+		glActiveTexture( GL_TEXTURE0 );
+
+		DrawTargetWindow();
 		TwDraw();
 		break;
 	}

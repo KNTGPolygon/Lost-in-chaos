@@ -2,8 +2,10 @@
 #include "Window.h"
 #include "Utility.h"
 #include <AntTweakBar.h>
+#include <Windows.h>
+#include "Draw.h"
 
-#define VSYNC 1
+#define VSYNC 0
 
 using namespace std;
 
@@ -19,8 +21,13 @@ void glfw_window_size_callback(GLFWwindow *pwnd, int w, int h)
 {
 	if(window.mode==WINDOW_MODE_WINDOWED)
 		window.lastW = w, window.lastH = h;
-	window.width = w;
-	window.height = h;
+	if(window.width!=w || window.height!=h)
+	{
+		DrawDestroyBuffers();
+		DrawCreateBuffers(w,h);
+		window.width = w;
+		window.height = h;
+	}
 	TwWindowSize(window.width,window.height);
 }
 
@@ -85,9 +92,12 @@ void WindowSetMouseMode(int mode)
 
 void WindowUpdate()
 {
+	for(int i=0;i<512;i++)
+		window.key[i] = (window.key[i]>0 ? 1 : 0);
+	glfwPollEvents();
+
 	if(window.key[GLFW_KEY_F11]==2)
 	{
-		cout << "chfs\n";
 		int mm = window.mouseMode;
 		WindowSetMouseMode(0);
 		WindowDestroy();
@@ -97,12 +107,13 @@ void WindowUpdate()
 			WindowCreate(window.lastW,window.lastH);
 		WindowSetMouseMode(mm);
 	}
-	for(int i=0;i<512;i++)
-		window.key[i] = (window.key[i]>0 ? 1 : 0);
-	double mx, my;
-	glfwGetCursorPos(window.handle,&mx,&my);
-	TwEventMousePosGLFW(mx,my);
-	glfwPollEvents();
+
+	{
+		double mx, my;
+		glfwGetCursorPos(window.handle,&mx,&my);
+		TwEventMousePosGLFW(mx,my);
+	}
+
 	glfwSwapBuffers(window.handle);
 }
 
@@ -113,13 +124,27 @@ void WindowSetUp()
 	glfwSetMouseButtonCallback(window.handle,glfw_mouse_button_callback);
 	glfwSetScrollCallback(window.handle,glfw_scroll_callback);
 	glfwSetCharCallback(window.handle,glfw_char_callback);
+
 	glfwMakeContextCurrent(window.handle);
+
 	glfwSwapInterval(VSYNC);
+
+	#ifdef _WIN32
+	typedef BOOL (WINAPI *PFNWGLSWAPINTERVALEXTPROC)(int interval);
+	PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
+	wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+	if(wglSwapIntervalEXT)
+		wglSwapIntervalEXT(VSYNC);
+	#endif
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable (GL_TEXTURE_2D);
+	glActiveTexture( GL_TEXTURE0 );
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glActiveTexture( GL_TEXTURE1 );
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glActiveTexture( GL_TEXTURE0 );
 }
 
 int WindowCreate(int w, int h)
@@ -136,6 +161,9 @@ int WindowCreate(int w, int h)
 
 	WindowSetUp();
 
+	if(DrawCreateBuffers(window.width,window.height)!=0)
+		return -3;
+
 	window.mode = WINDOW_MODE_WINDOWED;
 	return 0;
 }
@@ -151,7 +179,7 @@ int WindowCreateFullscreen()
 	TwWindowSize(window.width,window.height);
 
 	if(window.handle==0)
-		r = GL_FALSE;
+		return -1;
 	else
 	{
 		r = GL_TRUE;
@@ -160,13 +188,17 @@ int WindowCreateFullscreen()
 		window.mode = WINDOW_MODE_FULLSCREEN;
 	}
 
-	return (r!=GL_TRUE ? -1 : 0);
+	if(DrawCreateBuffers(window.width,window.height)!=0)
+		return -2;
+
+	return 0;
 }
 
 void WindowDestroy()
 {
 	if(window.handle==0)
 		return;
+	DrawDestroyBuffers();
 	glfwDestroyWindow(window.handle);
 	window.handle = 0;
 }
