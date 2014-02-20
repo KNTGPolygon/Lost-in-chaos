@@ -2,8 +2,7 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-#include "Math.h"
-#include "Resources.h"
+e
 
 Resources resources;
 
