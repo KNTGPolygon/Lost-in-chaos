@@ -1,9 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <map>
 
 #include "Math.h"
+
+#define ENTITY_ALIVE 1
 
 struct Entity
 {
@@ -42,15 +45,23 @@ struct Game
 		double gravity;
 	} physics;
 
-	Vector2d camera;
+	Vector2d camera, playerPos;
 
 	std::vector<Entity*> vUpdate;
 	std::vector<Prop*> vProps;
 
+	std::string nextlevel;
+
+	bool findGround(Vector2d pos, Vector2d vel, Vector2d &outn);
+
 	void loadMap(const char *mapname);
 
 	void update();
+
+	void drawLight();
 	void draw();
+
+	void clear();
 
 	Game();
 	~Game();

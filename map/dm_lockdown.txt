@@ -5,3 +5,6 @@ circle 8 0 2
 circle 0 -127 128
 plane -64 0 1 1
 plane 64 0 -1 1
+enemy 10 10 1
+plane 0 20 1 -10
+nextlevel dm_runoff

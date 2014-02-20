@@ -8,12 +8,16 @@
 #define PROP_CIRCLE 2
 #define PROP_RECTANGLE 3
 
+#define PROP_EDGE_HEIGHT 0.001
+
 struct Prop
 {
 	int propType, unused0;
 	Vector2d pos;
 
 	virtual bool calcImpact(Vector2d p, Vector2d v, double &time, Collision &c);
+	virtual bool calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c);
+	virtual bool onEdge(Vector2d p, Vector2d &n);
 
 	virtual void draw();
 
@@ -27,6 +31,8 @@ struct PropPlane : Prop
 	Vector3d color;
 
 	bool calcImpact(Vector2d p, Vector2d v, double &time, Collision &c);
+	bool calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c);
+	bool onEdge(Vector2d p, Vector2d &n);
 
 	void draw();
 
@@ -40,6 +46,8 @@ struct PropCircle : Prop
 	double radius;
 
 	bool calcImpact(Vector2d p, Vector2d v, double &time, Collision &c);
+	bool calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c);
+	bool onEdge(Vector2d p, Vector2d &n);
 
 	void draw();
 

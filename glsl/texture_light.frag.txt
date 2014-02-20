@@ -1,0 +1,14 @@
+uniform sampler2D texture0;
+uniform sampler2D texture1;
+
+varying vec2 vTexCoord;
+
+void main(void)
+{
+	vec4 c = texture2D(texture0, vTexCoord).rgba;
+	vec4 l = texture2D(texture1, vTexCoord).rgba;
+	gl_FragColor.r = c.r*min(2*l.r,1)+max(2*l.r-1,0);
+	gl_FragColor.g = c.g*min(2*l.g,1)+max(2*l.g-1,0);
+	gl_FragColor.b = c.b*min(2*l.b,1)+max(2*l.b-1,0);
+	gl_FragColor.a = 1;
+}
