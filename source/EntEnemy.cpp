@@ -73,8 +73,10 @@ void EntEnemy::updatePhysics(double dt)
 	collisions.clear();
 }
 
-void EntEnemy::draw()
+void EntEnemy::draw(int mode)
 {
+	if(mode!=ENTITY_DRAW_COLOR)
+		return;
 	glColor4f(0,1,0,1);
 	resources.drawSprite2 (1,pos,height*Vector2d(-Sign(aim.x),1));
 }

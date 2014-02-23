@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include "Math.h"
 
 #define DRAW_TARGETS 2
 #define DRAW_COLOR 0
@@ -60,3 +61,19 @@ void DrawDestroyBuffers();
 
 int DrawInit();
 void DrawRelease();
+
+inline void DrawLightCircle(double x, double y, double z, double r, double g, double b)
+{
+	glBegin(GL_TRIANGLES);
+	for(int i=0;i<16;i++)
+	{
+		double a = 2.0*PI*(double)i/16.0;
+		double c = 2.0*PI*(double)(i+1)/16.0;
+		glColor4f(r,g,b,1);
+		glVertex2f(x,y);
+		glColor4f(0,0,0,0);
+		glVertex2f(x+z*cos(a),y+z*sin(a));
+		glVertex2f(x+z*cos(c),y+z*sin(c));
+	}
+	glEnd();
+}

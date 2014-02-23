@@ -16,7 +16,7 @@ struct EntEnemy : Entity
 	double updateAuction(double dt);
 	void updatePhysics(double dt);
 
-	void draw();
+	void draw(int mode);
 
 	EntEnemy();
 	~EntEnemy();

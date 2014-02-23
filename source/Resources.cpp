@@ -78,6 +78,7 @@ void Resources::load ()
 	resources.loadTexture("texture/Sciana_drewno1.png",2,TEXTURE_REPEAT);
 	resources.loadTexture("texture/Sciana_drewno2.png",3,TEXTURE_REPEAT);
 	resources.loadTexture("texture/Sciana_drewno3.png",4,TEXTURE_REPEAT);
+    resources.loadTexture("texture/mhrok.png",5,0);
 }
 
 void Resources::drawSprite (int index, Vector2d pos)
@@ -105,6 +106,20 @@ void Resources::drawSprite2 (int index, Vector2d pos, Vector2d n)
 	glTexCoord2f(1, 1); glVertex2f(pos.x+n.x,pos.y+2*n.y);
 	glTexCoord2f(0, 1); glVertex2f(pos.x-n.x,pos.y+2*n.y);
 	glEnd();
+}
+
+void Resources::drawSprite2c (int index, Vector2d pos, Vector2d n)
+{
+    glBindTexture (GL_TEXTURE_2D, resources.texture[index]);
+
+    n*=0.5;
+    
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex2f(pos.x-n.x,pos.y-n.y);
+    glTexCoord2f(1, 0); glVertex2f(pos.x+n.x,pos.y-n.y);
+    glTexCoord2f(1, 1); glVertex2f(pos.x+n.x,pos.y+n.y);
+    glTexCoord2f(0, 1); glVertex2f(pos.x-n.x,pos.y+n.y);
+    glEnd();
 }
 
 void Resources::drawBackgroundTexture (int index, float offset)

@@ -27,6 +27,7 @@ struct Resources
 	
 	void drawSprite (int index, Vector2d pos);
 	void drawSprite2 (int index, Vector2d pos, Vector2d n);
+    void drawSprite2c (int index, Vector2d pos, Vector2d n);
 	void drawBackgroundTexture (int index, float offset);
 };
 

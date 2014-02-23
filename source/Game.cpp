@@ -27,7 +27,7 @@ void Entity::updatePhysics(double dt)
 {
 }
 
-void Entity::draw()
+void Entity::draw(int mode)
 {
 }
 
@@ -140,20 +140,6 @@ void Game::update()
 	}
 }
 
-inline void lightCircle(double x, double y, double z, double r, double g, double b)
-{
-	for(int i=0;i<16;i++)
-	{
-		double a = 2.0*PI*(double)i/16.0;
-		double c = 2.0*PI*(double)(i+1)/16.0;
-		glColor4f(r,g,b,1);
-		glVertex2f(x,y);
-		glColor4f(0,0,0,0);
-		glVertex2f(x+z*cos(a),y+z*sin(a));
-		glVertex2f(x+z*cos(c),y+z*sin(c));
-	}
-}
-
 void Game::drawLight()
 {
 	double aspect = (double)window.width/(double)window.height;
@@ -166,17 +152,25 @@ void Game::drawLight()
 	glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
 	glTranslated(-game.camera.x,-game.camera.y,0);
 
-	glBegin(GL_TRIANGLES);
-	lightCircle(0,0,4,1,0,0);
-	glEnd();
+	DrawLightCircle(0,0,4,1,0,0);
 
-	DrawBlendSubtract();
+	/*DrawBlendSubtract();
 
-	glBegin(GL_TRIANGLES);
-	lightCircle(playerPos.x,playerPos.y,5.0,0.25,0.25,0.25);
-	glEnd();
+	double f = sin(glfwGetTime()*0.5);
+	f*=f;
+	glColor4f(1,1,1,0.25+0.25*f);
+	resources.drawSprite2c(5,playerPos+Vector2d(0,0.905),Vector2d(4.0,4.0)*(2.0-0.5*f));
 
-	DrawBlendNormal();
+	//glBegin(GL_TRIANGLES);
+	//lightCircle(playerPos.x,playerPos.y,5.0,0.25,0.25,0.25);
+	//glEnd();
+
+	DrawBlendNormal();*/
+
+	for(int i=0;i<vUpdate.size();i++)
+	{
+		vUpdate[i]->draw(ENTITY_DRAW_LIGHT);
+	}
 }
 
 void Game::draw()
@@ -205,7 +199,7 @@ void Game::draw()
 
 	for(int i=0;i<vUpdate.size();i++)
 	{
-		vUpdate[i]->draw();
+		vUpdate[i]->draw(ENTITY_DRAW_COLOR);
 	}
 }
 

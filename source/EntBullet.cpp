@@ -3,6 +3,7 @@
 #include "Props.h"
 #include "Resources.h"
 #include "EntEnemy.h"
+#include "Draw.h"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ void EntBullet::updateLogic(double dt)
 	life+=dt;
 	if(life>10.0)
 		entity.flags&=~ENTITY_ALIVE;
+	track.push_back(Vector3d(pos.x,pos.y,time));
 }
 
 double EntBullet::updateAuction(double dt)
@@ -37,7 +39,7 @@ double EntBullet::updateAuction(double dt)
 	{
 		EntEnemy *e = (EntEnemy*)game.vUpdate[i];
 		double t = (pos.x-(e->pos.x))/(e->vel.x-vel.x), t1 = (pos.y-e->pos.y-e->height)/(e->vel.y-vel.y), t2 = (pos.y-e->pos.y)/(e->vel.y-vel.y);
-		if(min(t1,t2)<=t && max(t1,t2)>=t && t<=dt)
+		if(t>=0.0 && min(t1,t2)<=t && max(t1,t2)>=t && t<=dt)
 		{
 			collisions.clear();
 			ecol = e;
@@ -72,19 +74,28 @@ void EntBullet::updatePhysics(double dt)
 		}
 	}
 	collisions.clear();
+	time+=dt;
+	track.push_back(Vector3d(pos.x,pos.y,time));
 }
 
-void EntBullet::draw()
+void EntBullet::draw(int mode)
 {
+	if(mode!=ENTITY_DRAW_LIGHT)
+		return;
 	glBindTexture(GL_TEXTURE_2D,0);
 	Vector2d n = -vel.normalized()*4.0;
-	glColor4f(1,0,0,1);
-	glBegin(GL_LINES);
-	glColor4f(1,0,0,1);
-	glVertex2f(pos.x,pos.y);
-	glColor4f(1,0,0,0);
-	glVertex2f(pos.x+n.x,pos.y+n.y);
+
+	double a = min(time/0.1,1.0);
+
+	glBegin(GL_LINE_STRIP);
+	for(int i=0;i<track.size();i++)
+	{
+		glColor4f(1,0,0,a*exp(4.0*(track[i].z-time)));
+		glVertex2f(track[i].x,track[i].y);
+	}
 	glEnd();
+
+	DrawLightCircle(pos.x,pos.y,0.75*a,0.5,0,0);
 }
 
 EntBullet::EntBullet()
@@ -94,6 +105,7 @@ EntBullet::EntBullet()
 	mass = 1.0;
 	life = 0.0;
 	ecol = 0;
+	time = 0.0;
 }
 
 EntBullet::~EntBullet()

@@ -8,7 +8,7 @@
 
 struct EntPlayer : Entity
 {
-	Vector2d pos, vel, force, aim;
+	Vector2d pos, vel, force, aim, deltaV;
 	double mass, dir, height, health;
 
 	std::vector<Collision> collisions;
@@ -17,7 +17,7 @@ struct EntPlayer : Entity
 	double updateAuction(double dt);
 	void updatePhysics(double dt);
 
-	void draw();
+	void draw(int mode);
 
 	EntPlayer();
 	~EntPlayer();

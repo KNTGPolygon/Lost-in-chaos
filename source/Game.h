@@ -8,6 +8,9 @@
 
 #define ENTITY_ALIVE 1
 
+#define ENTITY_DRAW_COLOR 0
+#define ENTITY_DRAW_LIGHT 1
+
 struct Entity
 {
 	struct
@@ -25,7 +28,7 @@ struct Entity
 	virtual double updateAuction(double dt);
 	virtual void updatePhysics(double dt);
 
-	virtual void draw();
+	virtual void draw(int mode);
 
 	Entity();
 	virtual ~Entity();
