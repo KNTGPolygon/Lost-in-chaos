@@ -3,7 +3,8 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-e
+#include "Math.h"
+#include "Resources.h"
 
 #include <AL/alc.h>
 
