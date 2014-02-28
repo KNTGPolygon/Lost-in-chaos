@@ -146,7 +146,7 @@ void Game::update()
 	{
 		double vote = dt;
 		for(int i=0;i<vUpdate.size();i++)
-			vote = vUpdate[i]->entity.vote = min(max(vUpdate[i]->updateAuction(dt),0.0),vote);
+			vote = min(max(vUpdate[i]->entity.vote = vUpdate[i]->updateAuction(dt),0.0),vote);
 		for(int i=0;i<vUpdate.size();i++)
 			vUpdate[i]->updatePhysics(vote);
 		dt-=vote;
@@ -168,7 +168,7 @@ void Game::drawLight()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glLoadIdentity();
-	glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
+	glOrtho(-aspect*GAME_VIEW_RADIUS,aspect*GAME_VIEW_RADIUS,-GAME_VIEW_RADIUS,GAME_VIEW_RADIUS,-1,1);
 	glTranslated(-game.camera.x,-game.camera.y,0);
 
 	DrawLightCircle(0,0,4,1,0,0);
@@ -211,7 +211,7 @@ void Game::draw()
 	glVertex2f(-1,-1);
 	glEnd();
 
-	glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
+	glOrtho(-aspect*GAME_VIEW_RADIUS,aspect*GAME_VIEW_RADIUS,-GAME_VIEW_RADIUS,GAME_VIEW_RADIUS,-1,1);
 	glTranslated(-game.camera.x,-game.camera.y,0);
 
 	for(int i=0;i<vDraw.size();i++)

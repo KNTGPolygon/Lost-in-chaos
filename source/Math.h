@@ -19,6 +19,11 @@ template <typename R> bool IsZero(R x)
 
 template <typename R> R Sign(R x)
 {
+        return x>=(R)0 ? (R)1 : (R)-1;
+}
+
+template <typename R> R Sign0(R x)
+{
         if(x==(R)0)
                 return (R)0;
         return x>(R)0 ? (R)1 : (R)-1;

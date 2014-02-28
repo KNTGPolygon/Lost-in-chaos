@@ -8,7 +8,7 @@
 struct Outfit
 {
 	double m, k0, k, f;
-	Vector2d force, dv;
+	Vector2d force, dv, aim;
 
 	struct Point
 	{
@@ -21,8 +21,6 @@ struct Outfit
 	};
 
 	std::vector<Point> vP;
-
-	void flip();
 
 	void update(double dt, Vector2d pos);
 

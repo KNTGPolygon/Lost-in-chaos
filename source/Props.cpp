@@ -42,7 +42,7 @@ bool PropPlane::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
 		return true;
 	}
 	else
-	if(h>0.0 && vr<0.0)
+	if(vr<0.0)
 	{
 		time = -h/vr;
 		c.n = normal;

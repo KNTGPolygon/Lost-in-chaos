@@ -19,7 +19,7 @@ void EntBullet::updateLogic(double dt)
 
 double EntBullet::updateAuction(double dt)
 {
-	if(life>10.0)
+	if(life>1.0)
 		return dt;
 	Collision c;
 	collisions.clear();
@@ -68,7 +68,7 @@ void EntBullet::updatePhysics(double dt)
 			pos-=c.p*c.n;
 			if(c.v<0.0)
 			{
-				double dv = (1.5*c.n*vel);
+				double dv = (1.125*c.n*vel);
 				vel-=dv*c.n;
 			}
 		}

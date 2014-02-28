@@ -6,6 +6,8 @@
 
 #include "Math.h"
 
+#define GAME_VIEW_RADIUS 8.0
+
 #define ENTITY_ALIVE 1
 #define ENTITY_UPDATE 2
 #define ENTITY_DRAW 8

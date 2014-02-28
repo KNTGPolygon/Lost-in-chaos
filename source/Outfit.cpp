@@ -19,7 +19,18 @@ void Outfit::update(double dt, Vector2d pos)
 {
 	Collision c, C;
 	Vector2d F, a;
-	double t, T;
+	double t, T, flip = Sign(aim.x);
+
+	for(int i=0;i<vP.size();i++)
+	{
+		Point &p = vP[i];
+		if(!p.dynamic)
+		{
+			p.p.x = p.p0.x*flip;
+			p.p.y = p.p0.y;
+		}
+	}
+
 	for(int i=0;i<vP.size();i++)
 	{
 		Point &p = vP[i];
@@ -33,7 +44,7 @@ void Outfit::update(double dt, Vector2d pos)
 			a = (r.p-p.p);
 			F-=k*a.normalized()*(p.conDis[j]-a.magnitude());
 		}
-		a = (p.p0-p.p);
+		a = (Vector2d(p.p0.x*flip,p.p0.y)-p.p);
 		F+=k0*a*a.magnitude();
 		F-=p.v*f;
 		a = F/m;
@@ -53,18 +64,9 @@ void Outfit::update(double dt, Vector2d pos)
 			p.p+=p.v*(dt-T);
 		}
 	}
+
 	force = Vector2d(0.0,0.0);
 	dv = Vector2d(0.0,0.0);
-}
-
-void Outfit::flip()
-{
-	for(int i=0;i<vP.size();i++)
-	{
-		vP[i].p0.x = -vP[i].p0.x;
-		if(!vP[i].dynamic)
-			vP[i].p.x = -vP[i].p.x;
-	}
 }
 
 #define T(i) glTexCoord2f(vP[i].tc.x,vP[i].tc.y)

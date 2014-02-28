@@ -28,9 +28,9 @@ void EntPlayer::updateLogic(double dt)
 		aim2.x = mx-(double)window.width*0.5;
 		aim2.y = (double)window.height*0.5-my;
 		aim2.normalize();
-		if(Sgn(aim2.x)!=Sgn(aim.x))
-			outfit.flip();
-		aim = aim2;
+		//if(Sgn(aim2.x)!=Sgn(aim.x))
+		//	outfit.flip();
+		outfit.aim = aim = aim2;
 	}
 	Vector2d move, gn, v0 = vel;
 	bool gnd = game.findGround(pos,vel,gn);
