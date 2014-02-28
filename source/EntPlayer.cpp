@@ -36,9 +36,9 @@ void EntPlayer::updateLogic(double dt)
 	bool gnd = game.findGround(pos,vel,gn);
 
 	if(window.key['D']>0)
-		move-=gn.rotatedLeft(), dir = -1.0;
+		move-=gn.rotatedLeft();
 	if(window.key['A']>0)
-		move+=gn.rotatedLeft(), dir = 1.0;
+		move+=gn.rotatedLeft();
 
 	if(window.key['W']==2 && gnd)
 		vel+=Vector2d(0,PLAYER_JUMP_SPEED);
@@ -61,32 +61,13 @@ void EntPlayer::updateLogic(double dt)
 		EntBullet *bullet = new EntBullet;
 		bullet->pos = pos+Vector2d(0,1.75);
 		bullet->vel = vel+aim*32.0;
-		game.vUpdate.push_back(bullet);
+		game.insert(bullet);
 	}
-}
-
-double EntPlayer::updateAuction(double dt)
-{
-	Collision c;
-	collisions.clear();
-	for(int i=0;i<game.vProps.size();i++)
-	{
-		double t = dt;
-		if(game.vProps[i]->calcImpactLine(pos,height,vel,t,c) && t<=dt)
-		{
-			if(t!=dt)
-				collisions.clear();
-			collisions.push_back(c);
-			dt = t;
-		}
-	}
-	return dt;
 }
 
 void EntPlayer::updatePhysics(double dt)
 {
 	pos+=vel*dt;
-	game.playerPos = pos;
 	if(isWinner(dt))
 	for(int i=0;i<collisions.size();i++)
 	{
@@ -97,8 +78,6 @@ void EntPlayer::updatePhysics(double dt)
 			double dv = (1.0*c.n*vel);
 			vel-=dv*c.n;
 			outfit.dv+=dv*c.n;
-			//if(abs(vel*c.n)<0.125)
-			//	vel-=c.n*(vel*c.n);
 		}
 	}
 	collisions.clear();
@@ -128,7 +107,6 @@ EntPlayer::EntPlayer()
 	pos = Vector2d(0,2);
 	vel = Vector2d(0,0);
 	mass = PLAYER_MASS;
-	dir = 1.0;
 	height = 1.81;
 }
 

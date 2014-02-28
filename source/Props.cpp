@@ -19,13 +19,10 @@ bool Prop::onEdge(Vector2d p, Vector2d &n)
 	return false;
 }
 
-void Prop::draw()
-{
-}
-
-Prop::Prop()
+Prop::Prop() : Entity()
 {
 	propType = PROP_NONE;
+	entity.flags|=ENTITY_PROP|ENTITY_DRAW;
 }
 
 Prop::~Prop()
@@ -96,8 +93,10 @@ bool PropPlane::onEdge(Vector2d p, Vector2d &n)
 	return abs((p-pos)*normal)<PROP_EDGE_HEIGHT;
 }
 
-void PropPlane::draw()
+void PropPlane::draw(int mode)
 {
+	if(mode!=ENTITY_DRAW_COLOR)
+		return;
 	Vector2d n = 1024.0*normal;
 
 	glBindTexture (GL_TEXTURE_2D, resources.texture[4]);
@@ -186,8 +185,10 @@ bool PropCircle::onEdge(Vector2d p, Vector2d &n)
 	return abs((p-pos).magnitude()-radius)<PROP_EDGE_HEIGHT;
 }
 
-void PropCircle::draw()
+void PropCircle::draw(int mode)
 {
+	if(mode!=ENTITY_DRAW_COLOR)
+		return;
 	double a, b, xa, ya, xb, yb;
 	int n = 32+int(radius);
 
@@ -212,7 +213,7 @@ void PropCircle::draw()
 	glEnd();
 }
 
-PropCircle::PropCircle(double x, double y, double r) : radius(r)
+PropCircle::PropCircle(double x, double y, double r) : Prop(), radius(r)
 {
 	propType = PROP_CIRCLE;
 	pos.x = x, pos.y = y;

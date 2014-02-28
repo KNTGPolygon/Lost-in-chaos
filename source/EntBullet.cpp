@@ -12,7 +12,7 @@ void EntBullet::updateLogic(double dt)
 	force = Vector2d(0,-mass*game.physics.gravity);
 	vel+=(force/mass)*dt;
 	life+=dt;
-	if(life>10.0)
+	if(life>1.0)
 		entity.flags&=~ENTITY_ALIVE;
 	track.push_back(Vector3d(pos.x,pos.y,time));
 }
@@ -100,6 +100,7 @@ void EntBullet::draw(int mode)
 
 EntBullet::EntBullet()
 {
+	entity.flags|=ENTITY_UPDATE|ENTITY_DRAW;
 	pos = Vector2d(0,2);
 	vel = Vector2d(0,0);
 	mass = 1.0;

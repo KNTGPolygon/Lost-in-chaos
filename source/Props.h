@@ -10,21 +10,6 @@
 
 #define PROP_EDGE_HEIGHT 0.001
 
-struct Prop
-{
-	int propType, unused0;
-	Vector2d pos;
-
-	virtual bool calcImpact(Vector2d p, Vector2d v, double &time, Collision &c);
-	virtual bool calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c);
-	virtual bool onEdge(Vector2d p, Vector2d &n);
-
-	virtual void draw();
-
-	Prop();
-	virtual ~Prop();
-};
-
 struct PropPlane : Prop
 {
 	Vector2d normal;
@@ -34,7 +19,7 @@ struct PropPlane : Prop
 	bool calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c);
 	bool onEdge(Vector2d p, Vector2d &n);
 
-	void draw();
+	void draw(int mode);
 
 	PropPlane(double x, double y, double w, double h);
 	PropPlane();
@@ -49,7 +34,7 @@ struct PropCircle : Prop
 	bool calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c);
 	bool onEdge(Vector2d p, Vector2d &n);
 
-	void draw();
+	void draw(int mode);
 
 	PropCircle(double x, double y, double r);
 	PropCircle();

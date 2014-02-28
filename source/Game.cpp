@@ -41,6 +41,31 @@ Entity::~Entity()
 {
 }
 
+void Game::insert(Entity *e)
+{
+	e->entity.ie = vEntity.size();
+	vEntity.push_back(e);
+	if(e->entity.flags&ENTITY_PROP)
+		e->entity.ip = vProps.size(), vProps.push_back((Prop*)e);
+	if(e->entity.flags&ENTITY_UPDATE)
+		e->entity.iu = vUpdate.size(), vUpdate.push_back(e);
+	if(e->entity.flags&ENTITY_DRAW)
+		e->entity.id = vDraw.size(), vDraw.push_back(e);
+}
+
+#define ERASE(v,i,e) v.back()->entity.i = e->entity.i, swap(v[e->entity.i],v.back()), v.pop_back()
+
+void Game::erase(Entity *e)
+{
+	ERASE(vEntity,ie,e);
+	if(e->entity.flags&ENTITY_PROP)
+		ERASE(vProps,ip,e);
+	if(e->entity.flags&ENTITY_UPDATE)
+		ERASE(vUpdate,iu,e);
+	if(e->entity.flags&ENTITY_DRAW)
+		ERASE(vDraw,id,e);
+}
+
 void Game::loadMap(const char *mapname)
 {
 	fstream f(("map/"+string(mapname)+".txt").c_str(),ios_base::in);
@@ -60,14 +85,14 @@ void Game::loadMap(const char *mapname)
 		{
 			double x, y, nx, ny;
 			f >> x >> y >> nx >> ny;
-			vProps.push_back(new PropPlane(x,y,nx,ny));
+			insert(new PropPlane(x,y,nx,ny));
 		}
 		else
 		if(in=="circle")
 		{
 			double x, y, r;
 			f >> x >> y >> r;
-			vProps.push_back(new PropCircle(x,y,r));
+			insert(new PropCircle(x,y,r));
 		}
 		else
 		if(in=="player")
@@ -76,7 +101,7 @@ void Game::loadMap(const char *mapname)
 			f >> x >> y;
 			EntPlayer *player = new EntPlayer;
 			player->pos = Vector2d(x,y);
-			vUpdate.push_back(player);
+			insert(player);
 		}
 		else
 		if(in=="enemy")
@@ -86,7 +111,7 @@ void Game::loadMap(const char *mapname)
 			EntEnemy *enemy = new EntEnemy;
 			enemy->pos = Vector2d(x,y);
 			enemy->aim = Vector2d(d,0).normalized();
-			vUpdate.push_back(enemy);
+			insert(enemy);
 		}
 		else
 		if(in=="nextlevel")
@@ -100,25 +125,19 @@ void Game::loadMap(const char *mapname)
 
 void Game::update()
 {
+	Entity *e;
 	double dt = time.delta*time.speed;
 
-	int i, j;
-
-	for(i=0, j=0;i<vUpdate.size();i++)
+	for(int i=0;i<vUpdate.size();i++)
 	{
-		vUpdate[i]->updateLogic(dt);
-		if(vUpdate[i]->entity.flags&ENTITY_ALIVE)
-			vUpdate[j] = vUpdate[i], j++;
-		else
-			delete vUpdate[i];
-	}
-
-	if(i!=j)
-	{
-		if(j<=0)
-			vUpdate.clear();
-		else
-			vUpdate.resize(j);
+		e = vUpdate[i];
+		e->updateLogic(dt);
+		if(!(e->entity.flags&ENTITY_ALIVE))
+		{
+			erase(e);
+			delete e;
+			i--;
+		}
 	}
 
 	int count = 0;
@@ -194,12 +213,10 @@ void Game::draw()
 
 	glOrtho(-aspect*8.0,aspect*8.0,-8,8,-1,1);
 	glTranslated(-game.camera.x,-game.camera.y,0);
-	for(int i=0;i<vProps.size();i++)
-		vProps[i]->draw();
 
-	for(int i=0;i<vUpdate.size();i++)
+	for(int i=0;i<vDraw.size();i++)
 	{
-		vUpdate[i]->draw(ENTITY_DRAW_COLOR);
+		vDraw[i]->draw(ENTITY_DRAW_COLOR);
 	}
 }
 
@@ -222,5 +239,52 @@ Game::Game()
 }
 
 Game::~Game()
+{
+}
+
+double Human::updateAuction(double dt)
+{
+	Collision c;
+	collisions.clear();
+	for(int i=0;i<game.vProps.size();i++)
+	{
+		double t = dt;
+		if(game.vProps[i]->calcImpactLine(pos,height,vel,t,c) && t<=dt)
+		{
+			if(t!=dt)
+				collisions.clear();
+			collisions.push_back(c);
+			dt = t;
+		}
+	}
+	return dt;
+}
+
+void Human::updatePhysics(double dt)
+{
+	pos+=vel*dt;
+	if(isWinner(dt))
+	for(int i=0;i<collisions.size();i++)
+	{
+		Collision &c = collisions[i];
+		pos-=c.p*c.n;
+		if(c.v<0.0)
+		{
+			double dv = (1.0*c.n*vel);
+			vel-=dv*c.n;
+		}
+	}
+	collisions.clear();
+}
+
+Human::Human()
+{
+	entity.flags|=ENTITY_HUMAN|ENTITY_UPDATE|ENTITY_DRAW;
+	mass = 75.0;
+	height = 2.0;
+	maxHealth = health = 100.0;
+}
+
+Human::~Human()
 {
 }

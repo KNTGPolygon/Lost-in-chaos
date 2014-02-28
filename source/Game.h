@@ -7,6 +7,10 @@
 #include "Math.h"
 
 #define ENTITY_ALIVE 1
+#define ENTITY_UPDATE 2
+#define ENTITY_DRAW 8
+#define ENTITY_PROP 32
+#define ENTITY_HUMAN 64
 
 #define ENTITY_DRAW_COLOR 0
 #define ENTITY_DRAW_LIGHT 1
@@ -15,9 +19,11 @@ struct Entity
 {
 	struct
 	{
-		int type, flags;
+		int type, flags, ie, ip, iu, id;
 		double vote;
 	} entity;
+
+	Vector2d pos, vel;
 
 	inline bool isWinner(double dt)
 	{
@@ -50,10 +56,14 @@ struct Game
 
 	Vector2d camera, playerPos;
 
-	std::vector<Entity*> vUpdate;
+	std::vector<Entity*> vEntity;
 	std::vector<Prop*> vProps;
+	std::vector<Entity*> vUpdate, vDraw;
 
 	std::string nextlevel;
+
+	void insert(Entity *e);
+	void erase(Entity *e);
 
 	bool findGround(Vector2d pos, Vector2d vel, Vector2d &outn);
 
@@ -76,4 +86,29 @@ struct Collision
 {
 	Vector2d n;
 	double p, v;
+};
+
+struct Prop : Entity
+{
+	int propType, unused0;
+
+	virtual bool calcImpact(Vector2d p, Vector2d v, double &time, Collision &c);
+	virtual bool calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c);
+	virtual bool onEdge(Vector2d p, Vector2d &n);
+
+	Prop();
+	virtual ~Prop();
+};
+
+struct Human : Entity
+{
+	Vector2d aim;
+	double mass, height, health, maxHealth;
+	std::vector<Collision> collisions;
+
+	double updateAuction(double dt);
+	void updatePhysics(double dt);
+
+	Human();
+	virtual ~Human();
 };
