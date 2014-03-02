@@ -8,14 +8,7 @@ using namespace std;
 
 void EntEnemy::updateLogic(double dt)
 {
-	Vector2d gn, force;
-	bool gnd = game.findGround(pos,vel,gn);
-
-	force = Vector2d(0,-mass*game.physics.gravity);
-	force += Friction(vel,force,gn)*ENEMY_MI;
-
-	vel+=(force/mass)*dt;
-
+	ai->updateLogic(dt, mass, pos, vel, force, health);
 	if(health<=0.0)
 		entity.flags&=~ENTITY_ALIVE;
 }
@@ -30,6 +23,7 @@ void EntEnemy::draw(int mode)
 
 EntEnemy::EntEnemy()
 {
+	ai = new EnemyStupidAI();
 	entity.type = ENTITY_ENEMY;
 	entity.flags|=ENTITY_UPDATE|ENTITY_DRAW;
 	pos = Vector2d(0,2);
@@ -42,4 +36,5 @@ EntEnemy::EntEnemy()
 
 EntEnemy::~EntEnemy()
 {
+	delete(ai);
 }

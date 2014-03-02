@@ -33,7 +33,7 @@ void EntPlayer::updateLogic(double dt)
 		outfit.aim = aim = aim2;
 	}
 	Vector2d move, gn, v0 = vel;
-	bool gnd = game.findGround(pos,vel,gn);
+	bool gnd = game.findGround(pos,vel,gn); 
 
 	if(window.key['D']>0)
 		move-=gn.rotatedLeft();

@@ -3,10 +3,10 @@
 #include "Game.h"
 
 #define ENTITY_ENEMY 3
-#define ENEMY_MI 1.0
 
 struct EntEnemy : Human
 {
+	Vector2d force;
 	void updateLogic(double dt);
 
 	void draw(int mode);

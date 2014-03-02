@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 
+#include "AI.h"
 #include "Math.h"
 
 #define GAME_VIEW_RADIUS 8.0
@@ -104,6 +105,7 @@ struct Prop : Entity
 
 struct Human : Entity
 {
+	AI* ai;
 	Vector2d aim;
 	double mass, height, health, maxHealth;
 	std::vector<Collision> collisions;
