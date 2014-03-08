@@ -1,11 +1,28 @@
-player 0 8
+player 0 4
 plane 0 0 0 1
-circle -8 0 2
-circle 8 0 2
 circle 0 -127 128
-plane -64 0 1 1
-plane 64 0 -1 1
-enemy 10 10 1
-plane 0 20 1 -10
+circle 40 -89 90
+circle 45 -48 51
+plane -15 0 1 0.3
+plane 120 0 -1 1
+plane 140 0 -1 0
+enemy 10 3 1
+enemy 14 7 1
+enemy 100 17 1
+enemy 120 17 3
+enemy 0 21 1
+enemy -20 21 1
 rect 0 3 3 1
+rect 6 6 3 1
+rect 14 6 3 1
+rect 45 5 2 1
+rect 40 8 3 1
+rect 45 11 3 1
+rect 40 14 3 1
+rect 35 17 2 1
+rect 0 19 60 2
+rect 65 0 2 4
+rect 67 0 2.2 8
+rect 69 0 2.2 12
+rect 130 0 120.2 16
 nextlevel dm_runoff
