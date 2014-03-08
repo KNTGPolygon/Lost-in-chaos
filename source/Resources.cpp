@@ -78,7 +78,7 @@ int Resources::loadSound(const char *fname, int index)
     int r = data.load(fname);
     if(r!=0)
     {
-        cout << "fail\n";
+        cout << "fail "<< r <<"\n";
         return r;
     }
     data.dataToBuffer(buffers[index]);
@@ -95,7 +95,10 @@ void Resources::load ()
 	resources.loadTexture("texture/Sciana_drewno3.png",4,TEXTURE_REPEAT);
     resources.loadTexture("texture/mhrok.png",5,0);
 
-    resources.loadSound("sound/click.wav",0);
+    resources.loadSound("sound/Laser1.wav",0);
+    resources.loadSound("sound/Laser2.wav",1);
+    resources.loadSound("sound/Laser3.wav",2);
+    resources.loadSound("sound/Laser4.wav",3);
 }
 
 void Resources::play(int sound)

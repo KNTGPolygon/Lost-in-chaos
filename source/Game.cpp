@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
+#include <ctime>
 
 #include "Game.h"
 #include "Props.h"

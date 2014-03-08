@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <random>
 
 #include "AI.h"
 #include "Math.h"
@@ -64,6 +65,13 @@ struct Game
 	std::vector<Entity*> vUpdate, vDraw;
 
 	std::string nextlevel;
+
+	std::random_device rd;
+
+	inline int rand(int a, int b)
+	{
+		return a+(rd()-rd.min())%(b-a+1);
+	}
 
 	void insert(Entity *e);
 	void erase(Entity *e);

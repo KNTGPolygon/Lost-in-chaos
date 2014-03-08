@@ -61,7 +61,7 @@ void EntPlayer::updateLogic(double dt)
 		EntBullet *bullet = new EntBullet;
 		bullet->pos = pos+Vector2d(0,1.75);
 		bullet->vel = vel+aim*32.0;
-		resources.play(0);
+		resources.play(game.rand(0,3));
 		game.insert(bullet);
 	}
 }
