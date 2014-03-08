@@ -32,8 +32,18 @@ EnemyStupidAI::EnemyStupidAI(): state(IDLE), waitingTime(0), timeToChangeState(2
 
 void EnemyStupidAI::updateLogic(double dt, double &mass, Vector2d &pos, Vector2d &vel, Vector2d &force, double &health)
 {
-	if(waitingTime > timeToChangeState)
-	{
+	double distanceToPlayer = (game.playerPos - pos).x;
+
+	if(distanceToPlayer > -DISTANCE_TO_FOLLOW && distanceToPlayer < 0) {
+
+		state = LEFT;
+
+	} else if(distanceToPlayer < DISTANCE_TO_FOLLOW && distanceToPlayer >= 0) {
+
+		state = RIGHT;
+
+	} else if(waitingTime > timeToChangeState) {
+
 		waitingTime = 0;
 		int r = rand() % 4;
 		if(r == 0) state = IDLE;
@@ -42,20 +52,26 @@ void EnemyStupidAI::updateLogic(double dt, double &mass, Vector2d &pos, Vector2d
 		else if(r == 3) state = RIGHT;
 		if(state == JUMP) timeToChangeState = 0.1;
 		else timeToChangeState = double(rand() % 100) / 50;
+	
 	}
+	
 	waitingTime += dt;
-
 	Vector2d gn, move;
 	bool gnd = game.findGround(pos, vel, gn);
 
-	if(state == RIGHT)
+	if(state == RIGHT) {
+
 		move-=gn.rotatedLeft();
-	if(state == LEFT)
+	
+	} else if(state == LEFT) {
+
 		move+=gn.rotatedLeft();
 
-	if(state == JUMP && gnd) {
+	} else if(state == JUMP && gnd) {
+		
 		vel+=Vector2d(0,ENEMY_JUMP_SPEED);
 		state = IDLE;
+	
 	}
 
 	force = Vector2d(0, -mass * game.physics.gravity);

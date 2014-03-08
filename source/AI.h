@@ -2,8 +2,10 @@
 
 #include "Math.h"
 #define ENEMY_MI 1.0
-#define ENEMY_WALK_SPEED 4.0
+#define ENEMY_WALK_SPEED 2.0
 #define ENEMY_JUMP_SPEED 5.0
+
+#define DISTANCE_TO_FOLLOW 8.0
 
 struct AI {
 	AI();
