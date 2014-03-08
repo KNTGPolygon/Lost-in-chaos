@@ -5,6 +5,7 @@
 
 #include "Math.h"
 #include "Resources.h"
+#include "Wave.h"
 
 #include <AL/alc.h>
 
@@ -30,6 +31,7 @@ int Resources::init ()
 		return -5;
 	alGenBuffers(AUDIO_BUFFERS, buffers);
 	alGenSources(AUDIO_SOURCES, sources);
+    currentSource = 0;
 	return 0;
 }
 
@@ -70,6 +72,19 @@ int Resources::loadTexture (const char* nameOfFile, int index, int flags)
 	return texture[index];
 }
 
+int Resources::loadSound(const char *fname, int index)
+{
+    WaveData data;
+    int r = data.load(fname);
+    if(r!=0)
+    {
+        cout << "fail "<< r <<"\n";
+        return r;
+    }
+    data.dataToBuffer(buffers[index]);
+    return 0;
+}
+
 void Resources::load ()
 {
 	resources.loadTexture("texture/mapaja.jpg",31,TEXTURE_REPEAT);
@@ -79,7 +94,25 @@ void Resources::load ()
 	resources.loadTexture("texture/Sciana_drewno2.png",3,TEXTURE_REPEAT);
 	resources.loadTexture("texture/Sciana_drewno3.png",4,TEXTURE_REPEAT);
     resources.loadTexture("texture/mhrok.png",5,0);
+<<<<<<< HEAD
     resources.loadTexture("texture/cat.png", TEX_CAT,0);
+=======
+
+    resources.loadSound("sound/Laser1.wav",0);
+    resources.loadSound("sound/Laser2.wav",1);
+    resources.loadSound("sound/Laser3.wav",2);
+    resources.loadSound("sound/Laser4.wav",3);
+}
+
+void Resources::play(int sound)
+{
+    int s = sources[currentSource];
+
+    currentSource = (currentSource+1)%AUDIO_SOURCES;
+
+    alSourcei(s,AL_BUFFER,buffers[sound]);
+    alSourcePlay(s);
+>>>>>>> 27b218f581a4940433f7354567cd4d9bfcb94204
 }
 
 void Resources::drawSprite (int index, Vector2d pos)

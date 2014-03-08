@@ -61,6 +61,7 @@ void EntPlayer::updateLogic(double dt)
 		EntBullet *bullet = new EntBullet;
 		bullet->pos = pos+Vector2d(0,1.75);
 		bullet->vel = vel+aim*32.0;
+		resources.play(game.rand(0,3));
 		game.insert(bullet);
 	}
 }
@@ -88,7 +89,7 @@ void EntPlayer::draw(int mode)
 	switch(mode)
 	{
 		case ENTITY_DRAW_COLOR:
-		game.camera = (15.0*game.camera + pos)/16.0;
+		game.camera = (15.0*game.camera + pos + Vector2d(0,height*0.5))/16.0;
 		glPushMatrix();
 		glTranslated(pos.x,pos.y,0);
 		outfit.draw();

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <GL/glew.h>
+#include <ctime>
 
 #include "Game.h"
 #include "Props.h"
@@ -142,7 +143,7 @@ void Game::update()
 
 	int count = 0;
 
-	while(!IsZero(dt) && dt>0.0)
+	while(!IsZero(dt) && dt>0.0 && count<1024)
 	{
 		double vote = dt;
 		for(int i=0;i<vUpdate.size();i++)
@@ -155,7 +156,7 @@ void Game::update()
 	}
 	if(count>8)
 	{
-		cout << "count="<<count<<"\n";
+		cout << "updates: "<<count<<"/"<<dt<<"\n";
 	}
 }
 
