@@ -94,9 +94,7 @@ void Resources::load ()
 	resources.loadTexture("texture/Sciana_drewno2.png",3,TEXTURE_REPEAT);
 	resources.loadTexture("texture/Sciana_drewno3.png",4,TEXTURE_REPEAT);
     resources.loadTexture("texture/mhrok.png",5,0);
-<<<<<<< HEAD
     resources.loadTexture("texture/cat.png", TEX_CAT,0);
-=======
 
     resources.loadSound("sound/Laser1.wav",0);
     resources.loadSound("sound/Laser2.wav",1);
@@ -112,7 +110,6 @@ void Resources::play(int sound)
 
     alSourcei(s,AL_BUFFER,buffers[sound]);
     alSourcePlay(s);
->>>>>>> 27b218f581a4940433f7354567cd4d9bfcb94204
 }
 
 void Resources::drawSprite (int index, Vector2d pos)
