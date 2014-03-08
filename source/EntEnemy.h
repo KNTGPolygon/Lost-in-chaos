@@ -7,6 +7,7 @@
 struct EntEnemy : Human
 {
 	Vector2d force;
+	int direction;
 	void updateLogic(double dt);
 
 	void draw(int mode);

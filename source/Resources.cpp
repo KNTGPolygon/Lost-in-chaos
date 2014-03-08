@@ -94,6 +94,7 @@ void Resources::load ()
 	resources.loadTexture("texture/Sciana_drewno2.png",3,TEXTURE_REPEAT);
 	resources.loadTexture("texture/Sciana_drewno3.png",4,TEXTURE_REPEAT);
     resources.loadTexture("texture/mhrok.png",5,0);
+    resources.loadTexture("texture/cat.png", TEX_CAT,0);
 
     resources.loadSound("sound/Laser1.wav",0);
     resources.loadSound("sound/Laser2.wav",1);

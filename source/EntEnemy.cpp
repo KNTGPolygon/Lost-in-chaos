@@ -9,6 +9,13 @@ using namespace std;
 void EntEnemy::updateLogic(double dt)
 {
 	ai->updateLogic(dt, mass, pos, vel, force, health);
+
+	if(direction == 1 && ai->state == RIGHT)
+		direction = -1;
+	else if(direction == -1 && ai->state == LEFT)
+		direction = 1;
+
+	printf("%d\n", direction);
 	if(health<=0.0)
 		entity.flags&=~ENTITY_ALIVE;
 }
@@ -17,8 +24,8 @@ void EntEnemy::draw(int mode)
 {
 	if(mode!=ENTITY_DRAW_COLOR)
 		return;
-	glColor4f(0,1,0,1);
-	resources.drawSprite2 (1,pos,height*Vector2d(-Sign(aim.x),1));
+	//glColor4f(0,1,0,1);
+	resources.drawSprite2 (TEX_CAT,pos,height*Vector2d(direction*Sign(aim.x),1));
 }
 
 EntEnemy::EntEnemy()
@@ -32,6 +39,7 @@ EntEnemy::EntEnemy()
 	mass = 1.0;
 	height = 1.81;
 	health = 100.0;
+	direction = 1;
 }
 
 EntEnemy::~EntEnemy()
