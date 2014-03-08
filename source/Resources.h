@@ -16,14 +16,18 @@ struct Resources
 	double aspect[RESOURCE_TEXTURES];
 	ALuint buffers[AUDIO_BUFFERS];
 	ALuint sources[AUDIO_SOURCES];
+    int currentSource;
 
 
 	int init ();
 	void release();
 
 	int loadTexture (const char *fname, int index, int flags);
+    int loadSound(const char *fname, int index);
 
 	void load ();
+
+    void play(int sound);
 	
 	void drawSprite (int index, Vector2d pos);
 	void drawSprite2 (int index, Vector2d pos, Vector2d n);
@@ -36,11 +40,7 @@ extern Resources resources;
 #include <ogg/ogg.h>
 #include <vorbis/vorbisfile.h>
 
-
-
 #define BUFFER_SIZE (4096 * 4)
-
-
 
 class ogg_stream
 {
