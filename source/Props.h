@@ -40,3 +40,18 @@ struct PropCircle : Prop
 	PropCircle();
 	~PropCircle();
 };
+
+struct PropRectangle : Prop
+{
+	double width, height;
+
+	bool calcImpact(Vector2d p, Vector2d v, double &time, Collision &c);
+	bool calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c);
+	bool onEdge(Vector2d p, Vector2d &n);
+
+	void draw(int mode);
+
+	PropRectangle(double x, double y, double w, double h);
+	PropRectangle();
+	~PropRectangle();
+};

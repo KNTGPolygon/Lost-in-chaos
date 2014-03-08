@@ -96,6 +96,13 @@ void Game::loadMap(const char *mapname)
 			insert(new PropCircle(x,y,r));
 		}
 		else
+		if(in=="rect")
+		{
+			double x, y, w, h;
+			f >> x >> y >> w >> h;
+			insert(new PropRectangle(x,y,w,h));
+		}
+		else
 		if(in=="player")
 		{
 			double x, y;

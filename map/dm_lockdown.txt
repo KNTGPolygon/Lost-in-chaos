@@ -1,4 +1,4 @@
-player 0 4
+player 0 8
 plane 0 0 0 1
 circle -8 0 2
 circle 8 0 2
@@ -7,4 +7,5 @@ plane -64 0 1 1
 plane 64 0 -1 1
 enemy 10 10 1
 plane 0 20 1 -10
+rect 0 3 3 1
 nextlevel dm_runoff

@@ -227,3 +227,116 @@ PropCircle::PropCircle()
 PropCircle::~PropCircle()
 {
 }
+
+// PropRectangle
+
+inline int findMax4(double *t)
+{
+	int winner = 0;
+	for(int i=1;i<4;i++)
+	if(t[i]>t[winner])
+		winner = i;
+	return winner;
+}
+
+bool PropRectangle::calcImpact(Vector2d p, Vector2d v, double &time, Collision &c)
+{
+	static Vector2d n[] = {Vector2d(-1,0),Vector2d(1,0),Vector2d(0,-1),Vector2d(0,1)};
+	static int other0[] = {2,2,0,0};
+	static int other1[] = {3,3,1,1};
+
+	double d[] = {width*0.5,width*0.5,height*0.5,height*0.5};
+	double h[4];
+	double vr, t, vp;
+
+	for(int i=0;i<4;i++)
+		h[i] = (p-pos-((d[i])*n[i]))*n[i];
+
+	if(h[0]<=0 && h[1]<=0 && h[2]<=0 && h[3]<=0)
+	{
+		int w = findMax4(h);
+		vr = n[w]*v;
+		if(IsZero(h[w]) && (vr>0.0 || IsZero(vr)))
+			return false;
+		time = 0.0;
+		c.n = n[w];
+		c.p = h[w];
+		c.v = (vr<0.0 ? vr : 0.0);
+		return true;
+	}
+	else
+	for(int i=0;i<4;i++)
+	if(h[i]>0.0)
+	{
+		vr = v*n[i];
+		vp = (v-vr*n[i])*n[other0[i]];
+		t = -h[i]/vr;
+		if(vr<0 && h[other0[i]]+vp*t<=0 && h[other1[i]]-vp*t<=0)
+		{
+			time = t;
+			c.n = n[i];
+			c.p = 0.0;
+			c.v = vr;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool PropRectangle::calcImpactLine(Vector2d p, double height, Vector2d v, double &time, Collision &c)
+{
+	return calcImpact(p,v,time,c);
+}
+
+bool PropRectangle::onEdge(Vector2d p, Vector2d &normal)
+{
+	static Vector2d n[] = {Vector2d(-1,0),Vector2d(1,0),Vector2d(0,-1),Vector2d(0,1)};
+
+	double d[] = {width*0.5,width*0.5,height*0.5,height*0.5};
+	double h[4];
+
+	for(int i=0;i<4;i++)
+		h[i] = (p-pos-((d[i])*n[i]))*n[i];
+	if(h[0]<PROP_EDGE_HEIGHT && h[1]<PROP_EDGE_HEIGHT && h[2]<PROP_EDGE_HEIGHT && h[3]<PROP_EDGE_HEIGHT)
+	{
+		normal = n[findMax4(h)];
+		return true;
+	}
+	return false;
+}
+
+void PropRectangle::draw(int mode)
+{
+	if(mode!=ENTITY_DRAW_COLOR)
+		return;
+	glBindTexture (GL_TEXTURE_2D, resources.texture[4]);
+
+	double x[] = {pos.x-width*0.5,pos.x-width*0.5,pos.x+width*0.5,pos.x+width*0.5};
+	double y[] = {pos.y-height*0.5,pos.y+height*0.5,pos.y+height*0.5,pos.y-height*0.5};
+
+	glColor4f(1,1,1,1);
+	glBegin(GL_QUADS);
+	for(int i=0;i<4;i++)
+	{
+		glTexCoord2f(x[i]*0.5,y[i]*0.5);
+		glVertex2f(x[i],y[i]);
+	}
+	glEnd();
+}
+
+PropRectangle::PropRectangle(double x, double y, double w, double h)
+{
+	pos.x = x, pos.y = y;
+	width = w, height = h;
+}
+
+PropRectangle::PropRectangle()
+{
+	pos = Vector2d(0,0);
+	width = height = 1.0;
+}
+
+PropRectangle::~PropRectangle()
+{
+}

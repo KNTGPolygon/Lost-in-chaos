@@ -73,14 +73,19 @@ int WaveData::load(const char *fname)
 	}
 	if(head.subchunk2ID!=1635017060)
 	{
-		f.close();
-		return -13;
+		f.seekg(head.subchunk2Size+f.tellg(),f.beg);
+		f.read((char*)&head.subchunk2ID,8);
+		if(head.subchunk2ID!=1635017060)
+		{
+			f.close();
+			return -13;
+		}
 	}
-	if(head.subchunk2Size!=fsize-44)
+	/*if(head.subchunk2Size!=fsize-44)
 	{
 		f.close();
 		return -14;
-	}
+	}*/
 	try
 	{
 		channels = head.numChannels;
