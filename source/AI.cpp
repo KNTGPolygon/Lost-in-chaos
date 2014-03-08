@@ -12,7 +12,12 @@ void AI::updateLogic(double dt, double &mass, Vector2d &pos, Vector2d &vel, Vect
 	// ???
 }
 
-AI::AI()
+State AI::getState()
+{
+	return state;
+}
+
+AI::AI(): state(IDLE)
 {
 	srand(time(NULL));
 }
@@ -25,7 +30,7 @@ void PlayerAI::updateLogic(double dt, double &mass, Vector2d &pos, Vector2d &vel
 {
 }
 
-EnemyStupidAI::EnemyStupidAI(): state(IDLE), waitingTime(0), timeToChangeState(2.0)
+EnemyStupidAI::EnemyStupidAI(): waitingTime(0), timeToChangeState(2.0)
 {
 
 }

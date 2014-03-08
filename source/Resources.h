@@ -9,6 +9,7 @@
 #define AUDIO_SOURCES 64
 
 #define TEXTURE_REPEAT 1
+#define TEX_CAT 6
 
 struct Resources
 {
