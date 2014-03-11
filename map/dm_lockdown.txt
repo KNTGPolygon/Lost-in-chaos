@@ -25,4 +25,7 @@ rect 65 0 2 4
 rect 67 0 2.2 8
 rect 69 0 2.2 12
 rect 130 0 120.2 16
+light 0 0 4 0 1 0
+light -1 1 4 1 0 0
+light 1 1 4 0 0 1
 nextlevel dm_runoff

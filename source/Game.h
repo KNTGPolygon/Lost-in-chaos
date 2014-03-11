@@ -64,6 +64,15 @@ struct Game
 	std::vector<Prop*> vProps;
 	std::vector<Entity*> vUpdate, vDraw;
 
+	struct Light
+	{
+		Vector2d pos;
+		double radius;
+		Vector3d color;
+	};
+
+	std::vector<Light> lights;
+
 	std::string nextlevel;
 
 	std::random_device rd;

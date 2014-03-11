@@ -13,7 +13,7 @@ OBJDIR=make/$(TARGET)/
 OBJECTS=$(SOURCES:source/%.cpp=$(OBJDIR)%.o)
 RC=
 
-OUTPUT=bin/$(TARGET)/lost-in-chaos.exe
+OUTPUT=lost-in-chaos.exe
 
 include make/$(TARGET).mk
 

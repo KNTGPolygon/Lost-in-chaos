@@ -122,6 +122,13 @@ void Game::loadMap(const char *mapname)
 			insert(enemy);
 		}
 		else
+		if(in=="light")
+		{
+			Light l;
+			f >> l.pos >> l.radius >> l.color;
+			lights.push_back(l);
+		}
+		else
 		if(in=="nextlevel")
 			f >> game.nextlevel;
 		else
@@ -179,7 +186,11 @@ void Game::drawLight()
 	glOrtho(-aspect*GAME_VIEW_RADIUS,aspect*GAME_VIEW_RADIUS,-GAME_VIEW_RADIUS,GAME_VIEW_RADIUS,-1,1);
 	glTranslated(-game.camera.x,-game.camera.y,0);
 
-	DrawLightCircle(0,0,4,1,0,0);
+	for(int i=0;i<lights.size();i++)
+	{
+		Light &l = lights[i];
+		DrawLightCircle(l.pos.x,l.pos.y,l.radius,l.color.x,l.color.y,l.color.z);
+	}
 
 	/*DrawBlendSubtract();
 

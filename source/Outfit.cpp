@@ -63,6 +63,8 @@ void Outfit::update(double dt, Vector2d pos)
 			p.p-=C.p*C.n;
 			p.p+=p.v*(dt-T);
 		}
+		if((p.p-p.p0).magnitude2()>1.0)
+			p.p = p.p0+(p.p-p.p0).normalized();
 	}
 
 	force = Vector2d(0.0,0.0);
