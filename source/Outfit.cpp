@@ -18,7 +18,7 @@ Outfit::Point::Point()
 void Outfit::update(double dt, Vector2d pos)
 {
 	Collision c, C;
-	Vector2d F, a;
+	Vector2d F, a, p0;
 	double t, T, flip = Sign(aim.x);
 
 	for(int i=0;i<vP.size();i++)
@@ -44,7 +44,8 @@ void Outfit::update(double dt, Vector2d pos)
 			a = (r.p-p.p);
 			F-=k*a.normalized()*(p.conDis[j]-a.magnitude());
 		}
-		a = (Vector2d(p.p0.x*flip,p.p0.y)-p.p);
+		p0 = Vector2d(p.p0.x*flip,p.p0.y);
+		a = (p0-p.p);
 		F+=k0*a*a.magnitude();
 		F-=p.v*f;
 		a = F/m;
@@ -63,8 +64,8 @@ void Outfit::update(double dt, Vector2d pos)
 			p.p-=C.p*C.n;
 			p.p+=p.v*(dt-T);
 		}
-		if((p.p-p.p0).magnitude2()>1.0)
-			p.p = p.p0+(p.p-p.p0).normalized();
+		if((p.p-p0).magnitude2()>1.0)
+			p.p = p0+(p.p-p0).normalized();
 	}
 
 	force = Vector2d(0.0,0.0);
